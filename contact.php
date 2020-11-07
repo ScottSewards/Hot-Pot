@@ -2,16 +2,12 @@
 $title = "Contact";
 require "php/top.php";
 
-if(isset($_GET["redirected"])) {
-  $message = "You have been redirected to this webpage from home until the webpage features are complete.";
-}
-
 if(isset($_POST["submit-email"])) {
-  SendEmail(
-    "scotttsewards@hotmail.com",
+  send_email(
+    "scott.sewards@outlook.com",
     $_POST["subject"],
     $_POST["message"],
-    isset($_POST["sender"]) ? $_POST["sender"] : isset($signature) ? $signature : "Unknown",
+    isset($_POST["sender"]) ? $_POST["sender"] : isset($signature) ? $signature : "Signature-less",
     $_POST["email-address"],
     true
   );
@@ -21,7 +17,7 @@ if(isset($_POST["submit-email"])) {
   <section>
     <header>
       <h1>Contact</h1>
-      <h2>Contact Me Form</h2>
+      <h2>Contact Form</h2>
     </header>
     <form action="contact.php" method="post">
       <fieldset>
@@ -45,9 +41,6 @@ if(isset($_POST["submit-email"])) {
       </fieldset>
     </form>
   </section>
-  <article id='faq'>
-    <h2>Frequently Asked Questions</h2>
-  </article>
 </main>
 <?php
 require "php/bottom.php";

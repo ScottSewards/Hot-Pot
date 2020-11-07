@@ -5,7 +5,7 @@ require "php/top.php";
 if(!isset($signature)) header("location:signature.php");
 
 if(isset($_POST["send-verification"])) {
-  SendEmail(
+  send_email(
     $email,
     "$signature, Verify Your Signature",
     "<a href='sewards.me/dashboard.php?verify=true'>Click here to verify your email.</a>",
@@ -196,18 +196,11 @@ if(isset($_POST["send-verification"])) {
     ?>
   </section>
   <section>
-    <h2>Signpost</h2>
     <p>https://www.snapchat.com/add/[USERNAME]</p>
-    <p>https://onlyfans.com/[USERNAME]</p>
     <p>https://www.instagram.com/[USERNAME]</p>
     <p>https://www.snapchat.com/add/scottsewards</p>
     <p>https://www.instagram.com/scottsewards</p>
-    <p>www.sewards.me</p>
     <p>https://twitter.com/</p>
-  </section>
-  <section class="hide">
-    <h2>Vouchers</h2>
-    <a href="myjdw.php">MyJDW</a>
   </section>
 </main>
 <?php

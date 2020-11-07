@@ -5,17 +5,17 @@ require "php/top.php";
 if(isset($_POST["submit-colours"])) {
   setcookie("themeColour", $_POST["theme-colour"], time() + (86400 * 30), "/");
   setcookie("darkMode", $_POST["dark-mode"], time() + (86400 * 30), "/");
-  header("location: settings.php");
+  //header("location: settings.php");
 } else if(isset($_POST["submit-system-of-units"])) {
   setcookie("systemOfUnits", $_POST["system-of-unit"], time() + (86400 * 30), "/");
-  header("location: settings.php");
+  //header("location: settings.php");
 } else if(isset($_POST["submit-family-tree-view"])) {
   setcookie("familyTreeView", $_POST["family-tree-view"], time() + (86400 * 30), "/");
-  header("location: settings.php");
+  //header("location: settings.php");
 }
 ?>
-<main class="default-width">
-  <section id='colours'>
+<main>
+  <!--section id='colours'>
     <header>
       <h1>Settings</h1>
       <h2>Colours</h2>
@@ -54,7 +54,7 @@ if(isset($_POST["submit-colours"])) {
       </fieldset>
     </form>
   </section>
-  <!--section class="hide">
+  <section class="hide">
     <header>
       <h2>Family Tree</h2>
     </header>

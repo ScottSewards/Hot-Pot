@@ -75,6 +75,103 @@ require "php/top.php";
     </div>
   </section>
 </main>
+
+<main>
+  <section class="full-width">
+    <img class="banner" src="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png" alt="">
+    <img class='profile-pic' src="img/george.jpeg" alt="">
+    <h1>@scottsewards</h1>
+  </section>
+  <section>
+    <h2>Social Media</h2>
+    <div class="carousel">
+      <div>
+        <p>Facebook</p>
+        <img src="https://images-na.ssl-images-amazon.com/images/I/51lAc6kLN4L._AC_SX466_.jpg" alt="">
+        <a href="https://www.facebook.com/scott.sewards.97/">scott.sewards.97</a>
+      </div>
+      <div>
+        <p>Instagram</p>
+        <img src="https://consequenceofsound.net/wp-content/uploads/2019/01/cage-elephant-social-cues-album-announce-artwork.jpg?quality=80" alt=""/>
+        <a href="https://www.instagram.com/scottsewards/">scottsewards</a>
+      </div>
+      <div>
+        <p>Snapchat</p>
+        <img src="https://scottsewards.github.io/img/placeholder.png" alt=""/>
+        <a href="https://www.snapchat.com/add/scottsewards">scottsewards</a>
+      </div>
+    </div>
+  </section>
+  <div class="tiles">
+    <div>
+      <h2>Current Listening</h2>
+      <div class="track">
+        <h3 class="track-artist"><span>Premonition - Intro</span> by <span>Eminem</span></h3>
+        <picture class="track-cover">
+          <img src="https://images.genius.com/109e5e1425790e8f1b776fea8a074a4d.1000x1000x1.jpg" alt=""/>
+        </picture>
+      </div>
+    </div>
+    <div>
+      <h3>Ethereum Wallet Address</h3>
+      <img id='ethereum-wallet-address-qr-code' class='qr-code' src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=0xA14Ae9BC94005A93934a027024EB7421215853Af&choe=UTF-8&chld=L|0' alt='Ethereum Wallet Address QR Code'/>
+    </div>
+  </div>
+</main>
+
+
+
+<main>
+  <section>
+    <header>
+      <h1>Signature</h1>
+      <h2>About</h2>
+    </header>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </section>
+  <section>
+    <form action='index.php' method='post'>
+      <fieldset>
+        <legend>Sign-in</legend>
+        <div>
+          <label for='sign-in-email-address'>Email*</label>
+          <input id='sign-in-email-address' type='email' name='email-address' placeholder='orsonwells@hotmail.com' required>
+        </div>
+        <div>
+          <label for='sign-in-password'>Password*</label>
+          <input id='sign-in-password' type='password' name='password' placeholder='CitizenKane1941' autocomplete='' required>
+          <input type='button' value='Show' name='show-password'>
+        </div>
+        <div>
+          <label for='stay-signed-in'>Stay Signed In?</label>
+          <input id='stay-signed-in' class='yes-no' type='checkbox' name='stay-signed-in'>
+        </div>
+        <input type='submit' name='sign-in' value='Sign-in'>
+      </fieldset>
+    </form>
+    <form action='index.php' method='post'>
+      <fieldset>
+        <legend>Sign-up</legend>
+        <div>
+          <label for='sign-up-signature'>Signature*</label>
+          <input id=sign-up-signature type='text' name='signature' placeholder='CharlieChaplin' required>
+        </div>
+        <div>
+          <label for='sign-up-email-address'>Email*</label>
+          <input id=sign-up-email-address type='email' name='email-address' placeholder='charleschaplin123@outlook.co.uk' require>
+        </div>
+        <div>
+          <label for='sign-up-password'>Password*</label>
+          <input id='sign-up-password' type='password' name='password' placeholder='TheGreatDictator1940' required>
+          <input type='button' value='Show' name='show-password'>
+        </div>
+        <input type='submit' name='sign-up' value='Sign-up'>
+      </fieldset>
+    </form>
+  </section>
+</main>
+
+
 <?php
 require "php/bottom.php";
 ?>
