@@ -1,0 +1,233 @@
+<div class="section-grid">
+  <div class="section-cell-high">
+    <header>
+      <h3>Height</h3>
+    </header>
+    <p><?php echo $heightInCentimetres; ?> centimetres</p>
+    <p><?php echo $heightInMetres; ?> metres</p>
+    <p><?php echo $heightInInches; ?> inches</p>
+    <p><?php echo $heightInFeet ?> feet</p>
+  </div>
+  <!--https://opexfit.com/blog/how-to-calculate-tdee-total-daily-energy-expenditure/-->
+  <div class="section-cell">
+    <header>
+      <h3>Metabolic Rate</h3>
+    </header>
+    <p><?php echo $basalMetabolicRate; ?> Basal</p>
+    <p><?php echo $restingMetabolicRate; ?> Resting</p>
+  </div>
+  <div class="section-cell">
+    <header>
+      <h3>Thermic Effect of Feeding</h3>
+    </header>
+    <p>TEF = <?php echo $thermicEffectOfFeeding; ?></p>
+  </div>
+  <div class="section-cell">
+    <header>
+      <h3>Exercise Energy Expenditure</h3>
+    </header>
+    <p>EEE</p>
+    <ul>
+      <li>None = 0</li>
+      <li>Beginner = 1 hour</li>
+      <li>Advanced = 1+ hour</li>
+    </ul>
+  </div>
+  <div class="section-cell">
+    <header>
+      <h3>Non-Exercise Activity Thermogenesis</h3>
+    </header>
+    <p>NEAT</p>
+    <ul>
+      <li>Sedentary = 250</li>
+      <li>Physcial = 500</li>
+    </ul>
+  </div>
+  <div class="section-cell">
+    <header>
+      <h3>Total Daily Energy Expenditure</h3>
+    </header>
+    <p><?php echo $totalDailyEnergyExpenditure; ?> TDEE</p>
+    <p>TDEE = BRM + TEF + EEE + NEAT</p>
+  </div>
+  <div class="section-cell">
+    <header>
+      <h3>Macro Nutrients</h3>
+    </header>
+    <p>Calories = TDEE</p>
+    <ul>
+      <li>Carbs = 40% of TDEE = TDEE / 100 * 40</li>
+      <li>Fats = 30% of TDEE = TDEE / 100 * 30</li>
+      <li>Protein = 30% of TDEE = TDEE / 100 * 30</li>
+    </ul>
+  </div>
+  <div class="section-cell-wider">
+    <header>
+      <h3>Weight</h3>
+    </header>
+    <p><?php echo $weightInKilograms . " kilograms"; ?></p>
+    <p><?php echo $weightInPounds . " pounds"; ?></p>
+    <p><?php echo $weightInPartStone . " st " . $weightInPartOunces . " lbs"; ?></p>
+  </div>
+</div>
+</section>
+<!--section>
+<header>
+  <h2>Set Measurements</h2>
+</header>
+<p>Measurements history</p>
+<form action="diet-diary.php">
+  <fieldset>
+    <legend>Log Measurements</legend>
+    <div>
+      <label for="">Height (cm)</label>
+      <input type="number"/>
+    </div>
+    <div>
+      <label for="">Weight (cm)</label>
+      <input type="number".>
+    </div>
+    <div>
+      <input type="text">
+    </div>
+  </fieldset>
+</form>
+</section-->
+<!--section>
+<header>
+  <h2>Allergies</h2>
+</header>
+<p>In development.</p>
+</section-->
+
+
+
+
+
+
+
+<form class="hide" action="diet-diary.php" method="post">
+  <fieldset>
+    <legend>Set Date</legend>
+    <div>
+      <label for="set-date">Date</label>
+      <input id="set-date" type="date" name="set-date" value="2020-09-20">
+    </div>
+    <input type="submit" name="submit-set-date" value="Set Date">
+  </fieldset>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="hero">
+  <div id="output">
+    <div id="progressBar"></div>
+    <!-- The video player will be added here -->
+  </div>
+  <!-- Statistics -->
+  <div id="status">
+    <div>
+      <p class="show-leech">Downloading </p>
+      <p class="show-seed">Seeding </p>
+      <code>
+        <!-- Informative link to the torrent file -->
+        <a id="torrentLink" href="https://webtorrent.io/torrents/sintel.torrent">Download Torrent Link</a>
+      </code>
+      <span class="show-leech"> from </span>
+      <span class="show-seed"> to </span>
+      <code id="numPeers">0 peers</code>.
+    </div>
+    <div>
+      <code id="downloaded"></code> of <code id="total"></code> — <span id="remaining"></span>
+      <br>
+      Download Speed : <code id="downloadSpeed">0 b/s</code>
+      Upload Speed : <code id="uploadSpeed">0 b/s</code>
+    </div>
+  </div>
+</div>
+<!-- Include the latest version of WebTorrent -->
+<script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+<!-- Moment is used to show a human-readable remaining time -->
+<script src="http://momentjs.com/downloads/moment.min.js"></script>
+<script>
+return;
+var torrentId = 'https://webtorrent.io/torrents/sintel.torrent'
+var client = new WebTorrent()
+// HTML elements
+var $body = document.body
+var $progressBar = document.querySelector('#progressBar')
+var $numPeers = document.querySelector('#numPeers')
+var $downloaded = document.querySelector('#downloaded')
+var $total = document.querySelector('#total')
+var $remaining = document.querySelector('#remaining')
+var $uploadSpeed = document.querySelector('#uploadSpeed')
+var $downloadSpeed = document.querySelector('#downloadSpeed')
+// Download the torrent
+client.add(torrentId, function (torrent) {
+  // Torrents can contain many files. Let's use the .mp4 file
+  var file = torrent.files.find(function (file) {
+    return file.name.endsWith('.mp4')
+  })
+  // Stream the file in the browser
+  file.appendTo('#output')
+  // Trigger statistics refresh
+  torrent.on('done', onDone)
+  setInterval(onProgress, 500)
+  onProgress()
+  // Statistics
+  function onProgress () {
+    // Peers
+    $numPeers.innerHTML = torrent.numPeers + (torrent.numPeers === 1 ? ' peer' : ' peers')
+    // Progress
+    var percent = Math.round(torrent.progress * 100 * 100) / 100
+    $progressBar.style.width = percent + '%'
+    $downloaded.innerHTML = prettyBytes(torrent.downloaded)
+    $total.innerHTML = prettyBytes(torrent.length)
+
+    // Remaining time
+    var remaining
+    if (torrent.done) {
+      remaining = 'Done.'
+    } else {
+      remaining = moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize()
+      remaining = remaining[0].toUpperCase() + remaining.substring(1) + ' remaining.'
+    }
+    $remaining.innerHTML = remaining
+    // Speed rates
+    $downloadSpeed.innerHTML = prettyBytes(torrent.downloadSpeed) + '/s'
+    $uploadSpeed.innerHTML = prettyBytes(torrent.uploadSpeed) + '/s'
+  }
+  function onDone () {
+    $body.className += ' is-seed'
+    onProgress()
+  }
+})
+// Human readable bytes util
+function prettyBytes(num) {
+  var exponent, unit, neg = num < 0, units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  if (neg) num = -num
+  if (num < 1) return (neg ? '-' : '') + num + ' B'
+  exponent = Math.min(Math.floor(Math.log(num) / Math.log(1000)), units.length - 1)
+  num = Number((num / Math.pow(1000, exponent)).toFixed(2))
+  unit = units[exponent]
+  return (neg ? '-' : '') + num + ' ' + unit
+}
+</script>
+<script type="text/javascript">
+function DownloadVideo() {
+window.alert("Downloading video.");
+}
+</script>

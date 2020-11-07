@@ -1,0 +1,274 @@
+
+
+
+/*POSITION*/
+nav{
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  &.hybrid{
+    width: auto;
+  }
+}
+footer{
+  text-align: center;
+}
+
+
+
+/*NAVIGATION CONTENT*/
+nav{
+  >ul:hover{
+    cursor: pointer;
+  }
+}
+@media(max-width: $mobile-width){
+  #desktop{
+    display: none;
+  }
+  #mobile{
+    > ul{
+      background: linear-gradient(90deg, #277650, #29526D);
+      display: block;
+      position: absolute;
+      top: 3em;
+      left: 0;
+      width: 100%;
+      > li{
+        padding: 1em;
+      }
+    }
+  }
+}
+@media(min-width: $mobile-width){
+  #desktop{
+    > ul{
+      padding: 1em 0;
+      max-width: $max-width;
+      text-align: left;
+      > li{
+        display: inline;
+        position: relative;
+        padding: 1em;
+        margin-left: 0;
+        list-style-type: none;
+        > a{
+          padding: 0;
+        }
+        ul{
+          display: none;
+          position: absolute;
+          margin-top: 0.95em;
+          > li{
+            display: block;
+            padding: 1em;
+            margin-left: 0;
+            list-style-type: none;
+            > a{
+              padding: 0;
+            }
+          }
+        }
+        :not(:last-child) > ul{
+          left: 0;
+        }
+        :last-child > ul{
+          right: 0;
+        }
+        :hover > ul{
+          display: block;
+        }
+      }
+    }
+    + *{
+      margin-top: 5em;
+    }
+  }
+  #mobile{
+    display: none;
+  }
+}
+
+
+
+/*MAIN CONTENT*/
+main{
+  margin-top: 1em;
+  img{
+
+  }
+}
+@media(max-width: $mobile-width){
+  main{
+    margin: 3em auto 1.5em auto;
+  }
+}
+@media(min-width: $mobile-width){
+  main{
+    margin: 6.5em auto 1.5em auto;
+    max-width: $max-width;
+    &.lower{
+      margin-top: 35em !important;
+    }
+  }
+}
+
+
+
+/*FOOTER CONTENT*/
+footer{
+  clip-path: polygon(0 0, 0 70%, 100% 100%, 100% 30%);
+  table{
+    padding: 1em 0;
+    border-spacing: 5px;
+    width: 100%;
+    thead{
+      font-weight: bold;
+    }
+    tbody{
+      tr{
+        width: 100%;
+        td{
+          padding: 0.5em 1em;
+          width: 25%;
+        }
+      }
+    }
+  }
+}
+
+
+
+/*LINKS*/
+nav{
+  a{
+    text-decoration: none !important;
+  }
+}
+nav{
+  a{
+    color: inherit;
+    position: relative;
+    text-decoration: underline dotted;
+  }
+}
+iframe{
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+
+/*CONTENT*/
+main{
+  label, p{
+    line-height: 1.4;
+  }
+  section p{
+    font-size: 1em;
+    margin: 0.375em 0;
+  }
+  p + p{
+    margin-top: 1em;
+  }
+  ul, ol{
+    &:not(:last-child){
+      margin-bottom: 1em;
+    }
+    li{
+      margin-left: 1.5em;
+      list-style-type: square;
+    }
+  }
+  code{
+    display: block;
+    padding: 0.5em 1em;
+    width: 100%;
+  }
+}
+
+/*FORMS*/
+fieldset{
+  position: relative;
+  @include box(0, 0, 0.25em 0);
+  legend{
+    position: absolute;
+    @include pos(0.5em, 0, inherit, 0);
+    text-align: center;
+    font-weight: bold;
+    + form{
+      padding-top: 2em !important;
+    }
+  }
+  form{
+    padding: 1em;
+    div{
+      @include box(0, 0, 0.75em 0);
+      label{
+        background-color: rgba(0, 0, 0, 0.1);
+        @include box(0.5em 1em, 0, 0 0 0 1em);
+      }
+    }
+  }
+  textarea{
+    display: block;
+    resize: vertical;
+    min-height: 10em;
+    max-height: 30em;
+    width: 100%;
+  }
+}
+button, input, select{
+  cursor: pointer;
+  display: block;
+  padding: 1.5em 1em;
+  text-align: left;
+}
+input{
+  display: block;
+  width: 100%;
+  [type="checkbox"]{
+    padding: 1em;
+    height: 2em;
+    width: 2em;
+  }
+}
+input + button, input + label, input + input{
+  margin-top: 0.25em !important;
+}
+
+/*MEDIA*/
+figure{
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+  position: relative;
+  padding: 1em;
+  img, video{
+    display: block;
+    width: 100%;
+    max-width: 40em;
+    margin: auto;
+  }
+  figcaption{
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 2em;
+    padding: inherit;
+  }
+  @media(max-width: 47.5em){
+    figcaption{
+      left: 1em;
+    }
+  }
+  @media(min-width: 47.5em){
+    figcaption{
+      left: calc(100% / 2 - 20em);
+    }
+  }
+}

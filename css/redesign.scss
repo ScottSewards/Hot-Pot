@@ -1,0 +1,255 @@
+
+
+*{
+  user-select: none;
+  @include box(0, 0, 0);
+  box-sizing: border-box;
+  -moz-transition: all 0.1s linear;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+}
+html{
+  font-size: $font-size;
+  body, button, input, select, textarea, time{
+    //font-family: "Bookman Old Style";
+    font-kerning: normal;
+    font-size: 1em;
+    letter-spacing: 0.01em;
+  }
+}
+body{
+  background-color: $main-background;
+  @if $greyscale{
+    filter: grayscale($grey-scale);
+  }
+}
+nav, aside[id*='subnav']{
+  overflow-y: auto;
+  direction: rtl;
+  background-color: #222;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  //height: calc(100% - 3em);
+  width: $nav-width;
+  text-align: left;
+  input{padding: 1em 0.5em;}
+  a{
+    color: #fff;
+    text-decoration: none;
+  }
+  p{
+    padding: 1em;
+    text-align: left;
+    &.active{background: #444;}
+    &:not(.active){
+      cursor: pointer;
+      &:hover{background: #333;}
+    }
+    +ul{text-align: right;}
+  }
+  ul{
+    list-style-type: none;
+    li{
+      position: relative;
+      padding: 1em;
+      &.active{background: #444;}
+      &:not(.active){
+        cursor: pointer;
+        &:hover{background: #333;}
+      }
+    }
+  }
+}
+aside#user{
+  background: $user;
+  color: #fff;
+  display: none !important;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: $nav-width;
+  img{
+    padding: 0.25em;
+    height: 3em;
+    width: 3em;
+  }
+  p{
+    width: 100%;
+    padding: 1em;
+  }
+  &:hover{
+    ul{display: block;}
+  }
+  ul{
+    display: none;
+    position: fixed;
+    bottom: 3em;
+    width: $nav-width;
+    li{
+      background: $user;
+      padding: 1em;
+      list-style-type: none;
+      width: 100%;
+      &:hover{background: rgba($user, 0.25);}
+    }
+  }
+}
+aside[id*='subnav']{
+  background: #444 !important;
+  direction: ltr;
+  left: $nav-width !important;
+  text-align: left;
+  ul{
+    li{
+      &.active{
+        //margin-left: 0.25em;
+        background: #eee;
+        color: #222;
+      }
+      &:not(.active){
+        &:hover{
+          background: #555;
+        }
+      }
+    }
+  }
+  &::-webkit-scrollbar {width: 1em;}
+  &::-webkit-scrollbar-track {background: #555;}
+  &::-webkit-scrollbar-thumb {background: #222;}
+  +aside[id*='-subnav']{
+    background: #666 !important;
+    left: $nav-width * 2 !important;
+    +main, +*+main{
+      left: $nav-width * 3 !important;
+      width: calc(100% - #{$nav-width} * 3) !important;
+    }
+    &::-webkit-scrollbar {width: 1em;}
+    &::-webkit-scrollbar-track {background: #777;}
+    &::-webkit-scrollbar-thumb {background: #444;}
+  }
+  +main, +*+main{
+    left: $nav-width * 2 !important;
+    width: calc(100% - #{$nav-width} * 2) !important;
+  }
+}
+main{
+  background: #eee;
+  position: absolute;
+  left: $nav-width;
+  padding: 1em;
+  min-height: 100%;
+  width: calc(100% - #{$nav-width});
+  max-width: 58.5em;
+  overflow: auto;
+  &:has(>iframe){ //NOT SUPPORTED YET
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  article, section{
+    &:not(:first-child){padding-top: 1em;}
+    &:not(:last-child){
+      padding-bottom: 1em;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+  ol, ul{
+    margin-left: 1.5em;
+    list-style-type: square;
+  }
+}
+figure{
+  img{
+    display: block;
+    margin: auto;
+    width: 100%;
+    max-width: 30em;
+  }
+  figcaption{
+    text-align: center;
+    font-style: italic;
+  }
+}
+input[type="submit"]{
+  width: 10em !important;
+  margin: auto;
+  display: block;
+}
+button, input, textarea{
+  outline: 0;
+  padding: 1em;
+  width: 100%;
+}
+textarea{
+  resize: vertical;
+  min-height: 3.5em;
+  height: 7em;
+  max-height: 14em;
+}
+iframe{
+  width: 100%;
+  height: calc(100vh - 2.225em);
+}
+h1{
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+h2{font-size: 1.4em;}
+h3{font-size: 1.3em;}
+h4{font-size: 1.2em;}
+h5{font-size: 1.1em;}
+h6{font-size: 1em;}
+.inputs{
+  .input{
+    display: flex;
+    margin-bottom: 0.25em;
+    label{
+      padding: 1em 1em 1em 0;
+      white-space: nowrap;
+      &:after{content: ":";}
+    }
+  }
+}
+.persons, .pets, .tiles{
+  display: flex;
+  flex-wrap: wrap;
+  >div{
+    cursor: pointer;
+    background: $user;
+    color: #fff;
+    position: relative;
+    padding: 1em;
+    width: 10em;
+    height: 10em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    &:hover{transform: scale(1.1);}
+    p{
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      padding: 1em 0.5em;
+      width: 100%;
+      background: rgba(#222, 0.25);
+    }
+    img{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
+}
+.tabs{
+  display: flex;
+  flex-wrap: wrap;
+  >div{
+    background: $user;
+    padding: 1em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    &:hover{transform: scale(1.1);}
+  }
+}

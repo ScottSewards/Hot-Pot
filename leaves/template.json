@@ -1,0 +1,29 @@
+{
+  "id": "",
+  "forename": "",
+  "middle": "",
+  "surname": "",
+  "maiden": "",
+  "sex": "",
+  "born": {
+    "city": "",
+    "time": "",
+    "location": ""
+  },
+  "died": {
+    "city": "",
+    "time": "",
+    "location": ""
+  },
+  "fatherFather": "", //GET FROM FATHER
+  "fatherMother": "",
+  "father": "",
+  "motherFather": "", //GET FROM MOTHER
+  "motherMother": "",
+  "mother": "",
+  "siblings": {
+
+  }, //GET FROM FATHER, THEN MOTHER
+  "children": {
+
+  }
