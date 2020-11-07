@@ -13,6 +13,7 @@ if(!in_array($ipAddress, array('127.0.0.1', '::1'))) {
 if(mysqli_connect_error()) die();
 
 session_start();
+if(isset($_GET["sign-out"])) session_destroy();
 if(isset($_SESSION["id"])) $id = $_SESSION["id"];
 if(isset($_SESSION["signature"])) $signature = $_SESSION["signature"];
 if(isset($_SESSION["email"])) $email = $_SESSION["email"];
@@ -28,7 +29,7 @@ if(isset($_SESSION["email"])) $email = $_SESSION["email"];
     <!--meta http-equiv="Content-Security-Policy" content=""/> <PREVENT CLICKBAIT-->
     <title>s.me <?php if(!empty($title)) echo " - " . $title; ?></title>
     <!--link rel="shortcut icon" href=""-->
-    <link rel='stylesheet' type="text/css" href="css/custom.css">
+    <link rel='stylesheet' type="text/css" href="css/custom.min.css">
   </head>
   <body>
     <nav>
@@ -42,8 +43,8 @@ if(isset($_SESSION["email"])) $email = $_SESSION["email"];
           echo "<li><a href='dashboard.php'>Dashboard</a></li>";
           echo "<li><a href='signature.php?sign-out'>Sign-out</a></li>";
         } else {
-          echo "<li><a href='signature.php'>Sign-in</a></li>";
-          echo "<li><a href='signature.php'>Sign-up</a></li>";
+          echo "<li><a href='sign-in.php'>Sign-in</a></li>";
+          echo "<li><a href='sign-up.php'>Sign-up</a></li>";
         }
         ?>
       </ul>

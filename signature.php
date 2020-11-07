@@ -1,107 +1,56 @@
 <?php
 $title = "Signature";
 require "php/top.php";
-
-if(isset($signature) && !isset($_GET["sign"])) {
-  header("Location: dashboard.php");
-}
-
-if(isset($_POST["reset-password"])) {
-  SendEmail(
-    $email,
-    "$signature, Reset Your Password",
-    "<a href='sewards.me/dashboard.php?verify=true'>Click here to reset your password.</a>",
-    "Password Reseter",
-    "noreply@sewards.me",
-    false
-  );
-} if(isset($_POST["sign-in"])) {
-  $emailIn = htmlspecialchars(addslashes($_POST["email-address"]));
-  $passwordIn = htmlspecialchars(addslashes($_POST["password"]));
-  $signatureSelect = mysqli_query($connection, "SELECT * FROM signatures WHERE email='$emailIn'");
-  $signatureFetch = mysqli_fetch_array($signatureSelect);
-  $passwordHash = $signatureFetch['password'];
-
-  if(password_verify($passwordIn, $passwordHash)) {
-    $_SESSION['id'] = $signatureFetch['id'];
-    $_SESSION['signature'] = $signatureFetch['signature'];
-    $_SESSION['email'] = $signatureFetch['email'];
-    header("Location: dashboard.php");
-  } else $message = "Sign-in failed. ";
-} else if (isset($_POST["sign-up"])) {
-  $signatureUp = htmlspecialchars(addslashes($_POST['signature']));
-  $emailUp = htmlspecialchars(addslashes($_POST['email-address']));
-  $passwordUp = htmlspecialchars(addslashes($_POST['password']));
-  $emailSelect = mysqli_query($connection, "SELECT id FROM signatures WHERE email='$emailUp'");
-  $emailRows = mysqli_num_rows($emailSelect);
-
-  if($emailRows == "1") $message = "Email in use.";
-  else {
-    $passwordHash = password_hash($passwordUp, PASSWORD_DEFAULT);
-    $signatureInsert = mysqli_query($connection, "INSERT INTO signatures (signature, email, password) VALUES ('$signatureUp', '$emailUp', '$passwordHash')");
-    $signatureSelect = mysqli_query($connection, "SELECT * FROM signatures WHERE email='$emailUp' AND password='$passwordHash'");
-    $message = "Sign-up succeeded.";
-  }
-} else if(isset($_GET["sign-out"])) {
-  session_destroy();
-  $message = "Sign-out succeeded.";
-}
 ?>
 <main>
   <section>
     <header>
       <h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1>
+    </header>
     <?php
-    if(isset($_GET['sign'])) {
-      echo "
-      </header>
-      <p>This webpage does not render Signatures yet.</p>";
-    } else {
-      echo "
-        <h2>Sign-in</h2>
-      </header>
-      <form action='signature.php' method='post'>
-        <fieldset>
-          <div>
-            <label for='sign-in-email-address'>Email*</label>
-            <input id='sign-in-email-address' type='email' name='email-address' placeholder='orsonwells@hotmail.com' required>
-          </div>
-          <div>
-            <label for='sign-in-password'>Password*</label>
-            <input id='sign-in-password' type='password' name='password' placeholder='CitizenKane1941' autocomplete='' required>
-            <input type='button' value='Show' name='show-password'>
-          </div>
-          <div>
-            <label for='stay-signed-in'>Stay Signed In?</label>
-            <input id='stay-signed-in' class='yes-no' type='checkbox' name='stay-signed-in'>
-          </div>
-          <input type='submit' name='sign-in' value='Sign-in'>
-        </fieldset>
-      </form>
-    </section>
-    <section>
-      <h2>Sign-up</h2>
-      <form action='signature.php' method='post'>
-        <fieldset>
-          <div>
-            <label for='sign-up-signature'>Signature*</label>
-            <input id=sign-up-signature type='text' name='signature' placeholder='CharlieChaplin' required>
-          </div>
-          <div>
-            <label for='sign-up-email-address'>Email*</label>
-            <input id=sign-up-email-address type='email' name='email-address' placeholder='charleschaplin123@outlook.co.uk' require>
-          </div>
-          <div>
-            <label for='sign-up-password'>Password*</label>
-            <input id='sign-up-password' type='password' name='password' placeholder='TheGreatDictator1940' required>
-            <input type='button' value='Show' name='show-password'>
-          </div>
-          <input type='submit' name='sign-up' value='Sign-up'>
-        </fieldset>
-      </form>
-    </section>";
-  }
-  ?>
+    if(isset($_GET['sign'])) echo "<p>This webpage does not render Signatures yet.</p>";
+    ?>
+  </section>
+  <section class="full-width">
+    <img class="banner" src="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png" alt="">
+    <img class='profile-pic' src="images/george.jpeg" alt="">
+    <h1>@scottsewards</h1>
+  </section>
+  <section>
+    <h2>Social Media</h2>
+    <div class="carousel">
+      <div>
+        <p>Facebook</p>
+        <img src="https://images-na.ssl-images-amazon.com/images/I/51lAc6kLN4L._AC_SX466_.jpg" alt="">
+        <a href="https://www.facebook.com/scott.sewards.97/">scott.sewards.97</a>
+      </div>
+      <div>
+        <p>Instagram</p>
+        <img src="https://consequenceofsound.net/wp-content/uploads/2019/01/cage-elephant-social-cues-album-announce-artwork.jpg?quality=80" alt=""/>
+        <a href="https://www.instagram.com/scottsewards/">scottsewards</a>
+      </div>
+      <div>
+        <p>Snapchat</p>
+        <img src="images/placeholder.png" alt=""/>
+        <a href="https://www.snapchat.com/add/scottsewards">scottsewards</a>
+      </div>
+    </div>
+  </section>
+  <div class="tiles">
+    <div>
+      <h2>Current Listening</h2>
+      <div class="track">
+        <h3 class="track-artist"><span>Premonition - Intro</span> by <span>Eminem</span></h3>
+        <picture class="track-cover">
+          <img src="https://images.genius.com/109e5e1425790e8f1b776fea8a074a4d.1000x1000x1.jpg" alt=""/>
+        </picture>
+      </div>
+    </div>
+    <div>
+      <h3>Ethereum Wallet Address</h3>
+      <img id='ethereum-wallet-address-qr-code' class='qr-code' src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=0xA14Ae9BC94005A93934a027024EB7421215853Af&choe=UTF-8&chld=L|0' alt='Ethereum Wallet Address QR Code'/>
+    </div>
+  </div>
 </main>
 <?php
 require "php/bottom.php";
