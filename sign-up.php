@@ -30,15 +30,15 @@ if(isset($_POST["sign-up"])) {
     </header>
     <form action='sign-up.php' method='post'>
       <fieldset>
-        <div>
+        <div class='inline'>
           <label for='sign-up-signature'>Signature*</label>
           <input id=sign-up-signature type='text' name='signature' placeholder='CharlieChaplin' required>
         </div>
-        <div>
+        <div class='inline'>
           <label for='sign-up-email-address'>Email*</label>
           <input id=sign-up-email-address type='email' name='email-address' placeholder='charleschaplin123@outlook.co.uk' require>
         </div>
-        <div>
+        <div class='inline'>
           <label for='sign-up-password'>Password*</label>
           <input id='sign-up-password' type='password' name='password' placeholder='TheGreatDictator1940' required>
           <input type='button' value='Show' name='show-password'>

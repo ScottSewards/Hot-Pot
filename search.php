@@ -23,7 +23,7 @@ require "php/top.php";
           echo "<hr>";
           echo "Visit <a href='$link'>" . $fetch['signature'] . "</a>";
         }
-      } else echo "<p>No search.</p>";
+      } else echo "<p>Input a search query to find a signature.</p>";
       ?>
     </div>
   </section>

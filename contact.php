@@ -21,19 +21,19 @@ if(isset($_POST["submit-email"])) {
     </header>
     <form action="contact.php" method="post">
       <fieldset>
-        <div>
+        <div class='inline'>
           <label for="sender">Name</label>
           <input id="sender" type="text" name="sender" placeholder="Buster Keaton">
         </div>
-        <div>
+        <div class='inline'>
           <label for="email-address">Email*</label>
           <input id="email-address" type="email" name="email-address" placeholder="BusterKeaton@gmail.com" <?php if(isset($signature)) echo "value='$email'"; ?> required>
         </div>
-        <div>
+        <div class='inline'>
           <label for="email-subject">Subject*</label>
           <input id="email-subject" type="text" name="subject" placeholder="I can't sign-in" required>
         </div>
-        <div>
+        <div class='inline'>
           <label for="email-message">Message*</label>
           <textarea id="email-message" name="message" placeholder="Write a message." min="10" required></textarea>
         </div>

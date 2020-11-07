@@ -59,11 +59,12 @@ if(isset($_POST["send-verification"])) {
     <div>
       <form action='dashboard.php' method='post'>
         <fieldset>
-          <div>
+          <legend>Change Signature</legend>
+          <div class='inline'>
             <label for='real-name'>Real Name</label>
             <input id='real-name' type='text' name='real-name' placeholder='Scott Sewards'>
           </div>
-          <div>
+          <div class='inline'>
             <label for='signature'>Signature*</label>
             <input id='signature' type='text' name='signature' placeholder='<?php echo $signature ?>' required>
           </div>
@@ -79,7 +80,8 @@ if(isset($_POST["send-verification"])) {
     <div>
       <form action='dashboard.php' method='post'>
         <fieldset>
-          <div>
+          <legend>Change Email</legend>
+          <div class='inline'>
             <label for='email'>Email*</label>
             <input id='email' type='email' name='email' placeholder='<?php echo $email ?>' required>
           </div>
@@ -95,12 +97,13 @@ if(isset($_POST["send-verification"])) {
     <div>
       <form action='dashboard.php' method='post'>
         <fieldset>
-          <div>
+          <legend>Change Password</legend>
+          <div class='inline'>
             <label for='old-password'>Old Password</label>
             <input id='old-password' type='password' name='old-password' placeholder='TitaniumTitanic2020' required>
             <input type='button' value='Show' name='show-password'>
           </div>
-          <div>
+          <div class='inline'>
             <label for='new-password'>New Password</label>
             <input id='new-password' type='password' name='new-password' placeholder='TitaniumTitanic2020' required>
             <input type='button' value='Show' name='show-password'>
@@ -109,57 +112,6 @@ if(isset($_POST["send-verification"])) {
         </fieldset>
       </form>
     </div>
-    <div>
-      <form action='dashboard.php' method='post'>
-        <fieldset>
-          <div>
-            <label for='bitcoin-address'>Bitcoin Address</label>
-            <input id='bitcoin-address' type='text' name='bitcoin-address' placeholder='' <?php if(isset($bitcoinWallet)) echo "value='$bitcoinWallet'"; ?>>
-          </div>
-          <div>
-            <label for='bcash-address'>BCash Address</label>
-            <input id='bcash-address' type='text' name='bcash-address' placeholder='' <?php if(isset($bcashWallet)) echo "value='$bcashWallet'"; ?>>
-          </div>
-          <div>
-            <label for='ethereum-address'>Ethereum Address</label>
-            <input id='ethereum-address' type='text' name='ethereum-address' placeholder='0xA14Ae9BC94005A93934a027024EB7421215853Af' <?php if(isset($ethereumWallet)) echo "value='$ethereumWallet'"; ?>>
-          </div>
-          <div>
-            <label for='litecoin-address'>Litecoin Address</label>
-            <input id='litecoin-address' type='text' name='litecoin-address' placeholder='' <?php if(isset($litecoinWallet)) echo "value='$litecoinWallet'"; ?>>
-          </div>
-          <input type='submit' name='set-wallet-addresses' value='Set Wallet Addresses'>
-        </fieldset>
-      </form>
-    </div>
-    <div>
-      <form action='dashboard.php' method='post'>
-        <fieldset>
-          <div>
-            <label for='facebook'>Facebook</label>
-            <input id='facebook' type='text' name='facebook' placeholder='scott.sewards.97'>
-          </div>
-          <div>
-            <label for='snapchat'>Snapchat</label>
-            <input id='snapchat' type='text' name='snapchat' placeholder="scottsewards">
-          </div>
-          <div>
-            <label for='twitter'>Twitter</label>
-            <input id='twitter' type='text' name='twitter' placeholder="@ScottSewards">
-          </div>
-          <input type='submit' name='set-social-media' value='Set Social Media'>
-        </fieldset>
-      </form>
-    </div>
-  </section>
-  <section id="notifications">
-    <header>
-      <h2>Notifications</h2>
-    </header>
-    <?php
-    //GET VERIFIED STATUS FROM SQL DATABASE
-    echo "You need to verify your email.";
-    ?>
   </section>
 </main>
 <?php

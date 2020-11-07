@@ -40,16 +40,16 @@ if(isset($_POST["sign-in"])) {
     </header>
     <form action='sign-in.php' method='post'>
       <fieldset>
-        <div>
+        <div class='inline'>
           <label for='sign-in-email-address'>Email*</label>
           <input id='sign-in-email-address' type='email' name='email-address' placeholder='orsonwells@hotmail.com' required>
         </div>
-        <div>
+        <div class='inline'>
           <label for='sign-in-password'>Password*</label>
           <input id='sign-in-password' type='password' name='password' placeholder='CitizenKane1941' autocomplete='' required>
           <input type='button' value='Show' name='show-password'>
         </div>
-        <div>
+        <div class='inline'>
           <label for='stay-signed-in'>Stay Signed In?</label>
           <input id='stay-signed-in' class='yes-no' type='checkbox' name='stay-signed-in'>
         </div>
