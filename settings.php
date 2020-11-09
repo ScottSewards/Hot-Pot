@@ -1,20 +1,33 @@
 <?php
 $title = "Settings";
 require "php/top.php";
-
-if(isset($_POST["submit-colours"])) {
-  setcookie("themeColour", $_POST["theme-colour"], time() + (86400 * 30), "/");
-  setcookie("darkMode", $_POST["dark-mode"], time() + (86400 * 30), "/");
-  //header("location: settings.php");
-} else if(isset($_POST["submit-system-of-units"])) {
-  setcookie("systemOfUnits", $_POST["system-of-unit"], time() + (86400 * 30), "/");
-  //header("location: settings.php");
-} else if(isset($_POST["submit-family-tree-view"])) {
-  setcookie("familyTreeView", $_POST["family-tree-view"], time() + (86400 * 30), "/");
-  //header("location: settings.php");
-}
 ?>
 <main>
+  <section>
+    <h1>Settings</h1>
+    <article>
+      <form id='theme-colour-form'>
+        <fieldset>
+          <legend>Change Theme Colour</legend>
+          <div>
+            <div class='inline'>
+              <label for='theme-colour'>Theme colour</label>
+              <output id='theme-colour-output' name='theme-colour-output'></output>
+            </div>
+            <input id='theme-colour-hue' type='range' name='theme-colour-hue' min='0' max='359' style='background: -webkit-linear-gradient(left, #F00 0%, #FF0 16.66%, #0F0 33.33%, #0FF 50%, #00F 66.66%, #F0F 83.33%, #F00 100%); border: 0.6rem solid white;'>
+          </div>
+        </fieldset>
+      </form>
+      <script type="text/javascript">
+      $('#theme-colour-hue').value = getComputedStyle(document.documentElement).getPropertyValue('--col-theme-hue');
+      $('#theme-colour-output').value = getComputedStyle(document.documentElement).getPropertyValue('--col-theme-hue');
+      $('#theme-colour-hue').addEventListener('change', function() {
+        document.documentElement.style.setProperty("--col-theme-hue", this.value);
+        $('#theme-colour-output').value = this.value.toUpperCase();
+        setCookie('themeColourHue', this.value);
+      });
+      </script>
+  </section>
   <!--section id='colours'>
     <header>
       <h1>Settings</h1>

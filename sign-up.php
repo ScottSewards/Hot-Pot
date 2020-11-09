@@ -2,9 +2,7 @@
 $title = "Sign-up";
 require "php/top.php";
 
-if(isset($signature) && !isset($_GET["sign"])) {
-  header("Location: dashboard.php");
-}
+if(isset($signature) && !isset($_GET["sign"])) header("location: dashboard.php");
 
 if(isset($_POST["sign-up"])) {
   $signatureUp = htmlspecialchars(addslashes($_POST['signature']));
@@ -18,18 +16,16 @@ if(isset($_POST["sign-up"])) {
     $passwordHash = password_hash($passwordUp, PASSWORD_DEFAULT);
     $signatureInsert = mysqli_query($connection, "INSERT INTO signatures (signature, email, password) VALUES ('$signatureUp', '$emailUp', '$passwordHash')");
     $signatureSelect = mysqli_query($connection, "SELECT * FROM signatures WHERE email='$emailUp' AND password='$passwordHash'");
-    $message = "Sign-up succeeded.";
+    header("location: sign-in.php");
   }
 }
 ?>
 <main>
   <section>
-    <header>
-      <h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1>
-      <h2>Sign-up</h2>
-    </header>
+    <h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1>
     <form action='sign-up.php' method='post'>
       <fieldset>
+        <legend>Sign-up</legend>
         <div class='inline'>
           <label for='sign-up-signature'>Signature*</label>
           <input id=sign-up-signature type='text' name='signature' placeholder='CharlieChaplin' required>

@@ -15,12 +15,10 @@ if(isset($_POST["submit-email"])) {
 ?>
 <main>
   <section>
-    <header>
-      <h1>Contact</h1>
-      <h2>Contact Form</h2>
-    </header>
+    <h1>Contact</h1>
     <form action="contact.php" method="post">
       <fieldset>
+        <legend>Contact</legend>
         <div class='inline'>
           <label for="sender">Name</label>
           <input id="sender" type="text" name="sender" placeholder="Buster Keaton">

@@ -10,6 +10,14 @@ require "php/top.php";
 ?>
 <main>
   <section>
+    <form id='search-bar-form' action='search.php' post='get'>
+      <div class='inline'>
+        <input type='search' name='search' <?php if(isset($_GET["search"])) echo "value='" . $_GET["search"] . "'" ?> placeholder='Enter a query...' required>
+        <input type='submit' value='Search'>
+      </div>
+    </form>
+  </section>
+  <section>
     <h1>Search <?php if(isset($_GET["search"])) echo "for '$query'"?></h1>
     <div>
       <?php

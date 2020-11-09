@@ -1,7 +1,6 @@
 form {
   display: block;
   margin: var(--space) auto;
-  max-width: var(--character-limit);
 }
 form div[class^='inline'] {
   display: flex;
@@ -12,7 +11,7 @@ form div[class^='inline'] {
 }
 
 fieldset {
-  background: var(--col-darker-theme);
+  background: var(--col-dark-theme);
   color: var(--col-const-white);
   border: 0;
   border-radius: var(--border-radius);
@@ -33,8 +32,8 @@ label {
 }
 
 button, input, select, textarea {
-  background: var(--col-white);
-  color: var(--col-black);
+  background: var(--col-black);
+  color: var(--col-white);
   font-family: var(--font-family);
   font-size: var(--font-size);
   display: block;
@@ -44,16 +43,15 @@ button, input, select, textarea {
   margin: 0;
   width: 100%;
   &:not(:disabled):hover {
-    background: var(--col-black);
-    color: var(--col-white);
+    background: #999;
   }
-  //&:hover, &:focus { background: var(--col-theme-alpha); }
-  //&:focus { background: var(--col-theme); }
+}
+button, input {
+  + button, + input { margin-left: 0.2rem; }
 }
 
 button, input[type='button'], input[type='reset'], input[type='submit'] {
   cursor: pointer;
-  box-shadow: var(--shadow);
   width: auto;
   &[class*='wide'] { width: 100%; }
 }
@@ -61,17 +59,23 @@ button, input[type='button'], input[type='reset'], input[type='submit'] {
 input[type='checkbox'], input[type='radio'] {
   appearance: none;
   cursor: pointer;
-  padding: var(--space);
+  position: relative;
   height: 3rem;
-  width: 3rem !important;
+  width: 3rem;
 }
 input[type='checkbox'] { border-radius: var(--border-radius); }
+input[type='checkbox']:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  font-size: 2rem;
+}
 input[type='radio'] {
   border: calc(var(--space) / 2) solid var(--col-white);
   border-radius: 10rem !important;
   margin-right: var(--space);
 }
-input[type='checkbox']:checked, input[type='radio']:checked { background: var(--col-theme); }
 
 input[type='color'] {
   cursor: pointer;
@@ -83,14 +87,17 @@ input[type='color'] {
 input[type='range'] {
   -webkit-appearance: none;
   cursor: pointer;
+  padding-left: 0;
+  padding-right: 0;
   width: 100%;
   &::-webkit-slider-runnable-track, &::-moz-range-track {
     -webkit-appearance: none;
     width: 100%;
     height: 0.5rem;
+    background: yellow;
   }
   &::-webkit-slider-thumb, &::-moz-range-thumb {
-    -webkit-appearance: none;
+    appearance: none;
     background: var(--col-black);
     border: 0;
     border-radius: 0;
@@ -115,4 +122,5 @@ output {
 textarea { //REMOVE COLUMN AND ROW ATTRIBUTES FROM HTML IF PRESENT
   resize: vertical;
   min-height: 3rem;
+  max-height: 50vh;
 }

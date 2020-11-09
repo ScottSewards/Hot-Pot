@@ -1,12 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400&display=swap');
 :root {
   --col-const-white: #FFF;
   --col-const-black: #111;
   --col-white: var(--col-const-white);
   --col-black: var(--col-const-black);
 
+  --col-theme-hue: 300;
+
   --col-theme-default: #BE1349;
-  --col-theme: #6948BA;
-  --col-darker-theme: #573C9A; /*DARKER THAN --col-theme*/
+  --col-theme: hsl(var(--col-theme-hue), 45%, 55%);
+  --col-dark-theme: hsl(var(--col-theme-hue), 45%, 45%); /*DARKER THAN --col-theme*/
 
   --col-deleted: rgba(255, 0, 0, 0.6);
   --col-disabled: #CCCCCC;
@@ -16,7 +19,7 @@
   --col-marked: rgba(255, 255, 0, 0.6);
   --col-warned: #BB2B2B;
 
-  --font:'Segoe UI';
+  --font: 'Roboto Slab', serif;
   --font-size: 16px;
   --font-script-size: 70%;
 
@@ -61,3 +64,79 @@
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--col-theme); }
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.qr-code {
+  width: 10rem;
+  height: 10rem;
+}
+
+.profile-pic {
+  margin-top: -5rem;
+  width: 10rem;
+}
+
+.banner {
+  max-width: 100rem;
+  max-height: 25rem;
+  margin: auto;
+  margin-top: -1rem;
+  width: 100%;
+}
+
+#track {
+  display: flex;
+  margin: auto;
+}
+#track-art {
+  box-shadow: 0 0 5px 0 black;
+  z-index: 0;
+  cursor: pointer;
+  position: relative;
+  height: 10rem;
+  min-width: 10rem;
+  width: 10rem;
+}
+#track-art img {
+  height: 100%;
+  width: 100%;
+}
+#track-art:hover::before {
+  left: 30%;
+}
+#track-art::before {
+  z-index: -10;
+  transition: left 0.1s linear;
+  content: "";
+  background: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  border: 3rem solid black;
+  border-radius: 100%;
+  height: 10rem;
+  width: 10rem;
+}
+#track-information {
+  z-index: 10;
+  padding: 1rem;
+  width: auto;
+}

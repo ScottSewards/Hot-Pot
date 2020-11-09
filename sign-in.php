@@ -34,12 +34,10 @@ if(isset($_POST["sign-in"])) {
 ?>
 <main>
   <section>
-    <header>
-      <h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1>
-      <h2>Sign-in</h2>
-    </header>
+    <h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1>
     <form action='sign-in.php' method='post'>
       <fieldset>
+        <legend>Sign-in</legend>
         <div class='inline'>
           <label for='sign-in-email-address'>Email*</label>
           <input id='sign-in-email-address' type='email' name='email-address' placeholder='orsonwells@hotmail.com' required>
@@ -50,8 +48,8 @@ if(isset($_POST["sign-in"])) {
           <input type='button' value='Show' name='show-password'>
         </div>
         <div class='inline'>
-          <label for='stay-signed-in'>Stay Signed In?</label>
-          <input id='stay-signed-in' class='yes-no' type='checkbox' name='stay-signed-in'>
+          <label for='stay-signed-in'>Stay signed in?</label>
+          <input id='stay-signed-in' type='checkbox' name='stay-signed-in'>
         </div>
         <input type='submit' name='sign-in' value='Sign-in'>
       </fieldset>

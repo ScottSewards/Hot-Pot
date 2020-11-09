@@ -1,2 +1,2 @@
 # PHP-Hot-Pot
-A lot of projects in one repo to be merged.
+At the moment, this repo is an accumulation of multiple repos. I am reviewing the code to determine what can be used and what is clutter.
