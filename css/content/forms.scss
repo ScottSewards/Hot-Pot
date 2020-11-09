@@ -60,16 +60,16 @@ input[type='checkbox'], input[type='radio'] {
   appearance: none;
   cursor: pointer;
   position: relative;
-  height: 3rem;
   width: 3rem;
 }
 input[type='checkbox'] { border-radius: var(--border-radius); }
 input[type='checkbox']:checked::after {
   content: "✓";
-  position: absolute;
-  top: 0;
-  left: 1rem;
-  font-size: 2rem;
+  padding: 0.3rem;
+  //position: absolute;
+  //top: 0;
+  //left: 1rem;
+  //font-size: 2rem;
 }
 input[type='radio'] {
   border: calc(var(--space) / 2) solid var(--col-white);
