@@ -90,3 +90,12 @@ grid-box, .grid {
     &.show { display: block; }
   }
 }
+
+code-comment {
+  color: green;
+  font-weight: bold;
+  text-transform: uppercase !important;
+}
+comment-value {
+  color: orange;
+}

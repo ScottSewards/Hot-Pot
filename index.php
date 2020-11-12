@@ -1,5 +1,5 @@
 <?php
-require "php/top.php";
+require_once("head.php");
 ?>
 <main>
   <section>
@@ -8,5 +8,5 @@ require "php/top.php";
   </section>
 </main>
 <?php
-require "php/bottom.php";
+require_once("foot.php");
 ?>

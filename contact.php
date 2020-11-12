@@ -1,6 +1,6 @@
 <?php
 $title = "Contact";
-require "php/top.php";
+require_once("head.php");
 
 if(isset($_POST["submit-email"])) {
   send_email(
@@ -12,6 +12,8 @@ if(isset($_POST["submit-email"])) {
     true
   );
 }
+
+
 ?>
 <main>
   <section>
@@ -41,5 +43,5 @@ if(isset($_POST["submit-email"])) {
   </section>
 </main>
 <?php
-require "php/bottom.php";
+require_once("foot.php");
 ?>

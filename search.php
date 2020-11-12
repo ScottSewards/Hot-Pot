@@ -2,19 +2,21 @@
 if(isset($_GET["search"])) {
   $query = $_GET["search"];
   $title = "Search for '$query'";
-} else {
-  $title = "Search";
-}
+} else $title = "Search";
 
-require "php/top.php";
+require_once("head.php");
 ?>
 <main>
   <section>
     <form id='search-bar-form' action='search.php' post='get'>
-      <div class='inline'>
-        <input type='search' name='search' <?php if(isset($_GET["search"])) echo "value='" . $_GET["search"] . "'" ?> placeholder='Enter a query...' required>
-        <input type='submit' value='Search'>
-      </div>
+      <fieldset>
+        <legend>Search</legend>
+        <div class='inline'>
+          <label class='hide' for='search-bar'>Search</label>
+          <input id='search-bar' type='search' name='search' <?php if(isset($_GET["search"])) echo "value='" . $_GET["search"] . "'" ?> placeholder='Enter a query...' required>
+          <input type='submit' value='Search'>
+        </div>
+      </fieldset>
     </form>
   </section>
   <section>
@@ -37,5 +39,5 @@ require "php/top.php";
   </section>
 </main>
 <?php
-require "php/bottom.php";
+require_once("foot.php");
 ?>

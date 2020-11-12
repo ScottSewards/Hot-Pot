@@ -1,7 +1,7 @@
 <?php
 $title = "Dashboard";
 $content = true;
-require "php/top.php";
+require_once("head.php");
 
 if(!isset($signature)) header("location: signature.php");
 
@@ -79,9 +79,9 @@ if(isset($_POST["send-verification"])) {
       <form action='dashboard.php' method='post'>
         <fieldset>
           <legend>Change Signature</legend>
+          <label for='real-name'>Real Name</label>
+          <input id='real-name' type='text' name='real-name' placeholder='Scott Sewards'/>
           <div class='inline'>
-            <label for='real-name'>Real Name</label>
-            <input id='real-name' type='text' name='real-name' placeholder='Scott Sewards'/>
           </div>
           <div class='inline'>
             <label for='signature'>Signature*</label>
@@ -124,5 +124,5 @@ if(isset($_POST["send-verification"])) {
   </section>
 </main>
 <?php
-require "php/bottom.php";
+require_once("foot.php");
 ?>

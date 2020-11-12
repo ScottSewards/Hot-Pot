@@ -1,6 +1,6 @@
 <?php
 $title = "Sign-up";
-require "php/top.php";
+require_once("head.php");
 
 if(isset($signature) && !isset($_GET["sign"])) header("location: dashboard.php");
 
@@ -45,5 +45,5 @@ if(isset($_POST["sign-up"])) {
   </section>
 </main>
 <?php
-require "php/bottom.php";
+require_once("foot.php");
 ?>

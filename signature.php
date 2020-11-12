@@ -1,18 +1,28 @@
 <?php
 $title = "Signature";
-require "php/top.php";
+require_once("head.php");
 ?>
 <main>
   <section>
     <img class="banner" src='images/banner.png' alt='Banner'/>
-    <img class='profile-pic' src='images/image.png' alt='Image'/>
-    <section>
-      <!--h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1-->
-      <h1>@<?php if(isset($_GET['sign'])) echo $_GET['sign']; ?></h1>
-      <p>Theme colour = 70</p>
-    </section>
+    <img class='profile-pic' src='images/placeholder.png' alt='Image'/>
+    <!--h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1-->
+    <h1>@<?php if(isset($_GET['sign'])) echo $_GET['sign']; ?></h1>
   </section>
+
   <section>
+    <h2>Signature is listening to</h2>
+    <div id='track'>
+      <div id='track-art'>
+        <img id='track-cover' title='Rammstein Album Cover' src='images/rammstein.jpg' alt='Rammstein Album Cover'/>
+      </div>
+      <div id='track-information'>
+        <h3 id='track-artist'>Rammstein by Rammstein</h3>
+      </div>
+    </div>
+  </section>
+
+  <section class='hide'>
     <h2>Social Media</h2>
     <?php
     echo "There are no links.";
@@ -35,18 +45,8 @@ require "php/top.php";
       </div>
     </div-->
   </section>
-  <section>
-    <h2>Signature is listening to</h2>
-    <div id='track'>
-      <div id='track-art'>
-        <img id='track-cover' title='Rammstein Album Cover' src='images/rammstein.jpg' alt='Rammstein Album Cover'/>
-      </div>
-      <div id='track-information'>
-        <h3 id='track-artist'>Lazarus by David Bowie</h3>
-      </div>
-    </div>
-  </section>
-  <section>
+
+  <section class='hide'>
     <div>
       <h3>Ethereum Wallet Address</h3>
       <img id='ethereum-wallet-address-qr-code' class='qr-code' src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=0xA14Ae9BC94005A93934a027024EB7421215853Af&choe=UTF-8&chld=L|0' alt='Ethereum Wallet Address QR Code'/>
@@ -54,5 +54,5 @@ require "php/top.php";
   </section>
 </main>
 <?php
-require "php/bottom.php";
+require_once("foot.php");
 ?>
