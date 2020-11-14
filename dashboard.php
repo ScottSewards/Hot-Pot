@@ -64,7 +64,7 @@ if(isset($_POST["change-signature-image"])) {
           <div class='inline-equal'>
             <figure id='old-picture-figure'>
               <figcaption>Active Picture</figcaption>
-              <img id='old-picture' src='images/elephant.jpeg' alt='Active Image'/>
+              <img id='old-picture' src='images/pictures/george.jpeg' alt='Active Image'/>
             </figure>
             <figure id='new-picture-figure' class='hide'>
               <figcaption>New Picture</figcaption>
@@ -75,7 +75,6 @@ if(isset($_POST["change-signature-image"])) {
             <label for='picture'>Signature image*</label>
             <input id='picture' type='file' name='picture' accept='image/jpeg, image/gif, image/png' required/>
           </div>
-          <p>All images will be cropped and compressed.</p>
           <input type='submit' name='change-picture' value='Change Picture' disabled/>
         </fieldset>
       </form>

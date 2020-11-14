@@ -1,2 +1,2 @@
 # PHP-Hot-Pot
-At the moment, this repo is an accumulation of multiple repos. I am reviewing the code to determine what can be used and what is clutter.
+I don't know what this is yet. But its some sort of social hub for people. The project is basically a hot pot for me to test my PHP skills.

@@ -30,8 +30,8 @@ if(isset($_POST["send-email"])) {
 ?>
 <main>
   <section>
-    <img class='banner' src='images/banners/placeholder.png' alt='Banner'/>
-    <img class='profile-pic' src='images/pictures/placeholder.png' alt='Image'/>
+    <img class='banner' src='images/banner.png' alt='Banner'/>
+    <img class='picture' src='images/pictures/elephant.jpeg' alt='Image'/>
     <h1><?php echo "@{$sign}"; ?></h1>
     <?php
     if(isset($my_id)) { echo "
