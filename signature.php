@@ -1,17 +1,67 @@
 <?php
 $title = "Signature";
 require_once("head.php");
+
+if(isset($_GET["sign"])) {
+  $sign = $_GET["sign"];
+  $select = mysqli_query($connection, "SELECT * FROM signatures WHERE signature='{$sign}'");
+  if(mysqli_num_rows($select) == "1") {
+    $fetch = mysqli_fetch_assoc($select);
+    $email = $fetch["email"];
+  } else {
+    mysqli_close($connection);
+    exit;
+    return;
+  };
+} else redirect("404.html");
+
+if(isset($_POST["send-email"])) {
+  if($is_localhost == false)
+    send_email(
+      $email,
+      $_POST["subject"],
+      $_POST["message"],
+      isset($_POST["sender"]) ? $_POST["sender"] : isset($my_sign) ? $my_sign : "Nameless",
+      $_POST["email-address"],
+      true
+    );
+  else echo "Cannot send email on localhost.";
+}
 ?>
 <main>
   <section>
-    <img class="banner" src='images/banner.png' alt='Banner'/>
-    <img class='profile-pic' src='images/placeholder.png' alt='Image'/>
-    <!--h1>Signature <?php if(isset($_GET['sign'])) echo " for " . $_GET['sign'];?></h1-->
-    <h1>@<?php if(isset($_GET['sign'])) echo $_GET['sign']; ?></h1>
+    <img class='banner' src='images/banners/placeholder.png' alt='Banner'/>
+    <img class='profile-pic' src='images/pictures/placeholder.png' alt='Image'/>
+    <h1><?php echo "@{$sign}"; ?></h1>
+    <?php
+    if(isset($my_id)) { echo "
+      <form action='contact.php' method='POST'>
+        <fieldset>
+          <legend>Contact</legend>
+          <div class='inline'>
+            <label for='sender'>Name</label>
+            <input id='sender' type='text' name='sender' value='{$my_sign}' disabled/>
+          </div>
+          <div class='inline'>
+            <label for='email-address'>Return Email*</label>
+            <input id='email-address' type='email' name='email-address' value='{$my_email}' required disabled/>
+          </div>
+          <div class='inline'>
+            <label for=email-subject>Subject*</label>
+            <input id='email-subject' type='text' name='subject' placeholder='' required/>
+          </div>
+          <div class='inline'>
+            <label for='email-message'>Message*</label>
+            <textarea id='email-message' name='message' min='10' required></textarea>
+          </div>
+          <input type='submit' name='send-email' value='Send Email'/>
+        </fieldset>
+      </form>";
+    } else echo "<p>Sign-in to contact this signature.</p>";
+    ?>
   </section>
-
-  <section>
-    <h2>Signature is listening to</h2>
+  <!--section>
+    <h2><?php echo "@{$sign} is Playing"; ?></h2>
     <div id='track'>
       <div id='track-art'>
         <img id='track-cover' title='Rammstein Album Cover' src='images/rammstein.jpg' alt='Rammstein Album Cover'/>
@@ -20,38 +70,7 @@ require_once("head.php");
         <h3 id='track-artist'>Rammstein by Rammstein</h3>
       </div>
     </div>
-  </section>
-
-  <section class='hide'>
-    <h2>Social Media</h2>
-    <?php
-    echo "There are no links.";
-    ?>
-    <!--div class="carousel">
-      <div>
-        <p>Facebook</p>
-        <img src="https://images-na.ssl-images-amazon.com/images/I/51lAc6kLN4L._AC_SX466_.jpg" alt="">
-        <a href="https://www.facebook.com/scott.sewards.97/">scott.sewards.97</a>
-      </div>
-      <div>
-        <p>Instagram</p>
-        <img src="https://consequenceofsound.net/wp-content/uploads/2019/01/cage-elephant-social-cues-album-announce-artwork.jpg?quality=80" alt=""/>
-        <a href="https://www.instagram.com/scottsewards/">scottsewards</a>
-      </div>
-      <div>
-        <p>Snapchat</p>
-        <img src="images/placeholder.png" alt=""/>
-        <a href="https://www.snapchat.com/add/scottsewards">scottsewards</a>
-      </div>
-    </div-->
-  </section>
-
-  <section class='hide'>
-    <div>
-      <h3>Ethereum Wallet Address</h3>
-      <img id='ethereum-wallet-address-qr-code' class='qr-code' src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=0xA14Ae9BC94005A93934a027024EB7421215853Af&choe=UTF-8&chld=L|0' alt='Ethereum Wallet Address QR Code'/>
-    </div>
-  </section>
+  </section-->
 </main>
 <?php
 require_once("foot.php");

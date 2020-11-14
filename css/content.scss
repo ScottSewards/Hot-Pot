@@ -26,13 +26,13 @@ source { }
 // FORMS //
 ///////////
 form {
+  color: var(--col-const-white);
   display: block;
   margin: var(--space) auto;
 }
 
 fieldset {
   background: var(--col-dark-theme);
-  color: var(--col-const-white);
   display: block;
   padding: var(--space);
   padding-top: 0;
@@ -134,12 +134,19 @@ textarea { //REMOVE COLUMN AND ROW ATTRIBUTES FROM HTML IF PRESENT
   max-height: 50vh;
 }
 
-.inline {
+[class*='inline'] {
   display: flex;
+  align-items: top;
   justify-content: flex-start;
   width: 100%;
   button, input {
     + button, + input { margin-left: var(--space); }
+  }
+  &[class*='equal'] * {
+    width: 100% !important;
+  }
+  figure + figure {
+    margin-left: var(--space);
   }
 }
 .inline div { margin: 0; }
@@ -167,11 +174,16 @@ figure {
   position: relative;
   display: block;
   border-radius: var(--border-radius);
-  margin: var(--space) auto;
+  margin: auto;
 }
-figure img { }
+figure img {
+  margin: auto;
+  height: auto;
+  max-height: 12rem;
+  width: auto;
+  max-width: 12rem;
+}
 figcaption {
-  font-style: italic;
   display: block;
   padding: var(--space);
   text-align: center;
@@ -181,6 +193,7 @@ img {
   display: block;
   border-radius: var(--border-radius);
   margin: auto;
+  margin-top: var(--space);
   width: 100%;
   max-width: var(--content-width);
 }
