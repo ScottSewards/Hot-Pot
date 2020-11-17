@@ -34,23 +34,20 @@ if(isset($_POST["sign-up"])) {
   <section>
     <h1>Sign-up</h1>
     <form action='sign-up.php' method='POST' autocomplete='off'>
-      <fieldset>
-        <legend>Sign-up</legend>
-        <div class='inline'>
-          <label for='sign-up-name'>Username*</label>
-          <input id=sign-up-name type='text' name='name' placeholder='CharlieChaplin' autocomplete='off' autofocus required/>
-        </div>
-        <div class='inline'>
-          <label for='sign-up-email'>Email*</label>
-          <input id=sign-up-email type='email' name='email' placeholder='charles@chaplin.co.uk' require/>
-        </div>
-        <div class='inline'>
-          <label for='sign-up-password'>Password*</label>
-          <input id='sign-up-password' type='password' name='password' placeholder='CityLights1931' autocomplete='new-password' required/>
-          <input type='button' value='Show' name='show-password'/>
-        </div>
-        <input type='submit' name='sign-up' value='Sign-up'/>
-      </fieldset>
+      <div class='inline'>
+        <label for='sign-up-name'>Username*</label>
+        <input id=sign-up-name type='text' name='name' placeholder='CharlieChaplin' autocomplete='off' autofocus required/>
+      </div>
+      <div class='inline'>
+        <label for='sign-up-email'>Email*</label>
+        <input id=sign-up-email type='email' name='email' placeholder='charles@chaplin.co.uk' require/>
+      </div>
+      <div class='inline'>
+        <label for='sign-up-password'>Password*</label>
+        <input id='sign-up-password' type='password' name='password' placeholder='CityLights1931' autocomplete='new-password' required/>
+        <input type='button' value='Show' name='show-password'/>
+      </div>
+      <input type='submit' name='sign-up' value='Sign-up'/>
     </form>
   </section>
 </main>

@@ -1,2 +1,2 @@
 # Hot Pot
-Hot Pot is a free speech forum-like social network.
+Hot Pot is a forum-like social network.

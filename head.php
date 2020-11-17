@@ -13,7 +13,7 @@ function redirect($location) {
 $ip_address = $_SERVER["REMOTE_ADDR"];
 if(!in_array($ip_address, array("127.0.0.1", "::1"))) {
   $is_localhost = false;
-  $connection = mysqli_connect("localhost", "sewardsm_admin", "CaptainTommy1997", "sewardsm_signature");
+  $connection = mysqli_connect("localhost", "sewardsm_admin", "CaptainTommy1997", "sewardsm_hotpot");
 } else {
   $is_localhost = true;
   $connection = mysqli_connect("localhost", "root", "", "hotpot") or die(); //DO NOT die IN PRODUCTION
@@ -38,7 +38,7 @@ if(isset($_SESSION["banner"])) $my_banner = $_SESSION["banner"];
     <meta name='theme-color' content='#000'/>
     <!--meta http-equiv='Content-Security-Policy' content=''/-->
     <title>Hot Pot <?php if(isset($title)) echo " - " . $title; ?></title>
-    <!--link rel='shortcut icon' href=''-->
+    <link rel='shortcut icon' href='images/favicon.png'/>
     <link rel='stylesheet' type='text/css' href='css/variables.min.css'/>
     <link rel='stylesheet' type='text/css' href='css/content.min.css'/>
     <link rel='stylesheet' type='text/css' href='css/layouts.min.css'/>

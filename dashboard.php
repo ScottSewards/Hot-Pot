@@ -73,116 +73,111 @@ if(isset($_POST["change-name"])) {
 }
 ?>
 <main>
+  <h1>Dashboard</h1>
   <section>
-    <h1>Dashboard</h1>
-    <div>
+    <h2>User Settings</h2>
+    <article>
+      <h3>Change Name</h3>
       <form action='dashboard.php' method='POST'>
-        <fieldset>
-          <legend>Change Name</legend>
-          <div class='inline'>
-            <label for='name'>Name*</label>
-            <input id='name' type='text' name='name' placeholder='<?php echo $my_name; ?>' required/>
-          </div>
-          <input type='submit' name='change-name' value='Change Name'/>
-        </fieldset>
+        <div class='inline'>
+          <label for='name'>Name*</label>
+          <input id='name' type='text' name='name' placeholder='<?php echo $my_name; ?>' required/>
+        </div>
+        <input type='submit' name='change-name' value='Change Name'/>
       </form>
-    </div>
-    <div>
+    </article>
+    <article>
+      <h3>Change Email</h3>
       <form action='dashboard.php' method='POST'>
-        <fieldset>
-          <legend>Change Email</legend>
-          <div class='inline'>
-            <label for='email'>Email*</label>
-            <input id='email' type='email' name='email' placeholder='<?php echo $my_email ?>' required/>
-          </div>
-          <input type='submit' name='change-email' value='Change Email'/>
-        </fieldset>
+        <div class='inline'>
+          <label for='email'>Email*</label>
+          <input id='email' type='email' name='email' placeholder='<?php echo $my_email ?>' required/>
+        </div>
+        <input type='submit' name='change-email' value='Change Email'/>
       </form>
-    </div>
-    <div>
+    </article>
+    <article>
+      <h3>Change Email Settings</h3>
       <form action='dashboard.php' method='POST'>
-        <fieldset>
-          <legend>Update Email Settings</legend>
-          <div class='inline'>
-            <label for='can-email'>Can email</label>
-            <input id='can-email' type='checkbox' name='can-email' <?php if($my_can_email == true) echo "checked"; ?>/>
-          </div>
-          <input type='submit' name='update-email-settings' value='Update Email Settings'/>
-        </fieldset>
+        <div class='inline'>
+          <label for='can-email'>Allow other users to email me</label>
+          <input id='can-email' type='checkbox' name='can-email' <?php if($my_can_email == true) echo "checked"; ?>/>
+        </div>
+        <div class='inline'>
+          <label for='send-newsletter'>Subscribe to the Hot Pot newsletter</label>
+          <input id='send-newsletter' type='checkbox' name='send-newsletter' disabled/>
+        </div>
+        <input type='submit' name='update-email-settings' value='Update Email Settings'/>
       </form>
-    </div>
-    <div>
+    </article>
+    <article>
+      <h3>Change Password</h3>
       <form action='dashboard.php' method='POST'>
-        <fieldset>
-          <legend>Change Password</legend>
-          <div class='inline'>
-            <label for='old-password'>Old Password*</label>
-            <input id='old-password' type='password' name='old-password' autocomplete='off' required/>
-            <input type='button' value='Show' name='show-old-password'>
-          </div>
-          <div class='inline'>
-            <label for='new-password'>New Password*</label>
-            <input id='new-password' type='password' name='new-password' autocomplete='off' required/>
-            <input type='button' value='Show' name='show-new-password'>
-          </div>
-          <div class='inline'>
-            <input type='submit' name='change-password' value='Change Password'/>
-            <input type='submit' name='reset-password' value='Reset Password' disabled/>
-          </div>
-        </fieldset>
+        <div class='inline'>
+          <label for='old-password'>Old Password*</label>
+          <input id='old-password' type='password' name='old-password' autocomplete='off' required/>
+          <input type='button' value='Show' name='show-old-password'>
+        </div>
+        <div class='inline'>
+          <label for='new-password'>New Password*</label>
+          <input id='new-password' type='password' name='new-password' autocomplete='off' required/>
+          <input type='button' value='Show' name='show-new-password'>
+        </div>
+        <div class='inline'>
+          <input type='submit' name='change-password' value='Change Password'/>
+          <input type='submit' name='reset-password' value='Reset Password' disabled/>
+        </div>
       </form>
-    </div>
-    <div>
+    </article>
+    <article>
+      <h3>Change Picture</h3>
       <form action='dashboard.php' method='POST' enctype='multipart/form-data'>
-        <fieldset>
-          <legend>Change Picture</legend>
-          <div class='inline-equal'>
-            <figure id='my-picture-figure'>
-              <figcaption>My Picture</figcaption>
-              <img id='my-picture' src='<?php echo $my_picture; ?>' alt='My Picture'/>
-            </figure>
-            <figure id='my-new-picture-figure' class='hide'>
-              <figcaption>My New Picture</figcaption>
-              <img id='my-new-picture'/>
-            </figure>
-          </div>
-          <div class='inline'>
-            <label for='picture'>Image*</label>
-            <input id='picture' type='file' name='picture' accept='image/jpeg, image/gif, image/png' required/>
-          </div>
-          <input type='submit' name='change-picture' value='Change Picture'/>
-        </fieldset>
+        <figure id='my-picture-figure'>
+          <figcaption>My Picture</figcaption>
+          <img id='my-picture' src='<?php echo $my_picture; ?>' alt='My Picture'/>
+        </figure>
+        <div class='inline'>
+          <label for='picture'>Image*</label>
+          <input id='picture' type='file' name='picture' accept='image/jpeg, image/gif, image/png' required/>
+        </div>
+        <input type='submit' name='change-picture' value='Change Picture'/>
       </form>
       <script type='text/javascript'>
-      $("#my-picture").addEventListener('change', function() { //t.ly/fijM
+      $("#picture").addEventListener('change', function() { //t.ly/fijM
         if(this.files[0]) {
           var reader = new FileReader();
           reader.onload = e => {
-            $('#my-new-picture-figure').classList.remove('hide');
-            $('#my-new-picture').src = e.target.result;
+            $('#my-picture').src = e.target.result;
           }
           reader.readAsDataURL(this.files[0]);
-          //COMPRESS IMAGE
         }
       });
       </script>
-    </div>
-    <div>
+    </article>
+    <article>
       <form action='dashboard.php' method='POST' enctype='multipart/form-data'>
-        <fieldset>
-          <legend>Change Banner</legend>
-          <figure id='my-banner-figure'>
-            <figcaption>My Banner</figcaption>
-            <img id='my-banner' src='<?php echo $my_banner; ?>' alt='My Banner'/>
-          </figure>
-          <div class='inline'>
-            <label for='banner'>Image*</label>
-            <input id='banner' type='file' name='banner' accept='image/jpeg, image/gif, image/png' required/>
-          </div>
-          <input type='submit' name='change-banner' value='Change Banner'/>
-        </fieldset>
+        <figure id='my-banner-figure'>
+          <figcaption>My Banner</figcaption>
+          <img id='my-banner' src='<?php echo $my_banner; ?>' alt='My Banner'/>
+        </figure>
+        <div class='inline'>
+          <label for='banner'>Image*</label>
+          <input id='banner' type='file' name='banner' accept='image/jpeg, image/gif, image/png' required/>
+        </div>
+        <input type='submit' name='change-banner' value='Change Banner'/>
       </form>
-    </div>
+      <script type='text/javascript'>
+      $("#banner").addEventListener('change', function() { //t.ly/fijM
+        if(this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = e => {
+            $('#my-banner').src = e.target.result;
+          }
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+      </script>
+    </article>
   </section>
 </main>
 <?php

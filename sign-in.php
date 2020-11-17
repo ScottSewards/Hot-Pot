@@ -32,26 +32,23 @@ if(isset($_POST["submit-sign-in"])) {
   <section>
     <h1>Sign-in</h1>
     <form action='sign-in.php' method='post'>
-      <fieldset>
-        <legend>Sign-in</legend>
-        <div class='inline'>
-          <label for='sign-in-email'>Email*</label>
-          <input id='sign-in-email' type='email' name='email' placeholder='orson@welles.com' autocomplete='on' autofocus required/>
-        </div>
-        <div class='inline'>
-          <label for='sign-in-password'>Password*</label>
-          <input id='sign-in-password' type='password' name='password' placeholder='CitizenKane1941' autocomplete='on' required/>
-          <input type='button' value='Show' name='show-password'/>
-        </div>
-        <div class='inline'>
-          <label for='stay-signed-in'>Stay signed in?</label>
-          <input id='stay-signed-in' type='checkbox' name='stay-signed-in' disabled/>
-        </div>
-        <div class='inline'>
-          <input id='submit-sign-in' type='submit' name='submit-sign-in' value='Sign-in'/>
-          <input id='request-reset-password' type='button' value='Reset Password' disabled/>
-        </div>
-      </fieldset>
+      <div class='inline'>
+        <label for='sign-in-email'>Email*</label>
+        <input id='sign-in-email' type='email' name='email' placeholder='orson@welles.com' autocomplete='on' autofocus required/>
+      </div>
+      <div class='inline'>
+        <label for='sign-in-password'>Password*</label>
+        <input id='sign-in-password' type='password' name='password' placeholder='CitizenKane1941' autocomplete='on' required/>
+        <input type='button' value='Show' name='show-password'/>
+      </div>
+      <div class='inline'>
+        <label for='stay-signed-in'>Stay signed in?</label>
+        <input id='stay-signed-in' type='checkbox' name='stay-signed-in' disabled/>
+      </div>
+      <div class='inline'>
+        <input id='submit-sign-in' type='submit' name='submit-sign-in' value='Sign-in'/>
+        <input id='request-reset-password' type='button' value='Reset Password' disabled/>
+      </div>
     </form>
     <p>Don't have a signature? <a href='sign-up.php'>Sign-up here</a>.</p>
   </section>
