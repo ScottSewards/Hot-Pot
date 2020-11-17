@@ -11,10 +11,9 @@ if(isset($_POST["submit-post"])) {
   redirect("index.php");
 }
 ?>
-<template id="post">
-</template>
 <main>
   <section>
+    <h1>Index</h1>
     <h2>Featured Users</h2>
     <div class='users'>
       <?php
@@ -51,10 +50,7 @@ if(isset($_POST["submit-post"])) {
     </div>
   </section>
   <section>
-    <header>
-      <h1>Index</h1>
-      <h2>New Posts</h2>
-    </header>
+    <h2>New Posts</h2>
     <p>This section will show the newest posts.</p>
     <hr>
     <div id='posts'>
@@ -93,19 +89,24 @@ if(isset($_POST["submit-post"])) {
   </section>
   <section>
     <h2>Create Post</h2>
-    <p>This feature is in-development. If you post, it will be posted in the HotPot community until creating communities is supported. Soon you will be able to post pictures too.</p>
-    <hr>
-    <form action='index.php' method='POST'>
-      <div class='inline'>
-        <label for='title'>Title*</label>
-        <input id='title' type='text' name='title' required>
-      </div>
-      <div>
-        <label for='content'>Content*</label>
-        <textarea id='content' name='content' required></textarea>
-      </div>
-      <input type='submit' name='submit-post' value='Submit Post'/>
-    </form>
+    <?php
+    if(isset($my_id)) {
+      echo "
+      <p>This feature is in-development. If you post, it will be posted in the HotPot community until creating communities is supported. Soon you will be able to post pictures too.</p>
+      <hr>
+      <form action='index.php' method='POST'>
+        <div class='inline'>
+          <label for='title'>Title*</label>
+          <input id='title' type='text' name='title' required>
+        </div>
+        <div>
+          <label for='content'>Content*</label>
+          <textarea id='content' name='content' required></textarea>
+        </div>
+        <input type='submit' name='submit-post' value='Submit Post'/>
+      </form>";
+    } else echo "Sign-in to create a post.";
+    ?>
   </section>
 </main>
 <?php
