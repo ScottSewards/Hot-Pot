@@ -1,46 +1,48 @@
 <?php
-$title = "Signature";
+$title = "User";
 require_once("head.php");
 
-if(isset($_GET["sign"])) {
-  $sign = $_GET["sign"];
-  $select = mysqli_query($connection, "SELECT * FROM signatures WHERE signature='{$sign}'");
-  if(mysqli_num_rows($select) == "1") {
-    $fetch = mysqli_fetch_assoc($select);
-    $email = $fetch["email"];
-  } else {
-    mysqli_close($connection);
-    exit;
-    return;
-  };
-} else redirect("404.html");
+if(!isset($_GET["name"])) {
+  mysqli_close($connection);
+  redirect("404.html");
+}
+
+$name = $_GET["name"];
+$select = mysqli_query($connection, "SELECT * FROM users WHERE name='{$name}'");
+if(mysqli_num_rows($select) == "1") {
+  $fetch = mysqli_fetch_array($select);
+  $id = $fetch["id"];
+  $created = $fetch["created"];
+  $email = $fetch["email"];
+  $can_email = $fetch["can_email"];
+  $picture = $fetch["picture"];
+  $banner = $fetch["banner"];
+} else {
+  mysqli_close($connection);
+  redirect("404.html");
+};
 
 if(isset($_POST["send-email"])) {
-  if($is_localhost == false)
-    send_email(
-      $email,
-      $_POST["subject"],
-      $_POST["message"],
-      isset($_POST["sender"]) ? $_POST["sender"] : isset($my_sign) ? $my_sign : "Nameless",
-      $_POST["email-address"],
-      true
-    );
-  else echo "Cannot send email on localhost.";
+  if($is_localhost == false) send_email($email, $_POST["subject"], $_POST["message"], $my_name, $_POST["email-address"], true);
+  else echo "You cannot send an email on localhost.";
 }
 ?>
 <main>
   <section>
-    <img class='banner' src='images/banner.png' alt='Banner'/>
-    <img class='picture' src='images/pictures/elephant.jpeg' alt='Image'/>
-    <h1><?php echo "@{$sign}"; ?></h1>
+    <img class='banner' src='<?php echo $banner; ?>' alt='Banner'/>
+    <img class='picture' src='<?php echo $picture; ?>' alt='Picture'/>
+    <h1><?php echo $name; ?></h1>
+    <p><?php echo "User since {$created}."; ?></p>
     <?php
-    if(isset($my_id)) { echo "
+    echo $can_email;
+    if(isset($my_id) and $can_email == true) {
+      echo "
       <form action='contact.php' method='POST'>
         <fieldset>
           <legend>Contact</legend>
           <div class='inline'>
             <label for='sender'>Name</label>
-            <input id='sender' type='text' name='sender' value='{$my_sign}' disabled/>
+            <input id='sender' type='text' name='sender' value='{$my_name}' disabled/>
           </div>
           <div class='inline'>
             <label for='email-address'>Return Email*</label>
@@ -57,11 +59,11 @@ if(isset($_POST["send-email"])) {
           <input type='submit' name='send-email' value='Send Email'/>
         </fieldset>
       </form>";
-    } else echo "<p>Sign-in to contact this signature.</p>";
+    } else if(isset($my_id)) echo "<p>This user has disabled contact..</p>";
     ?>
   </section>
   <!--section>
-    <h2><?php echo "@{$sign} is Playing"; ?></h2>
+    <h2><?php echo "{$name} is Playing"; ?></h2>
     <div id='track'>
       <div id='track-art'>
         <img id='track-cover' title='Rammstein Album Cover' src='images/rammstein.jpg' alt='Rammstein Album Cover'/>

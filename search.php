@@ -14,7 +14,7 @@ require_once("head.php");
         <legend>Search</legend>
         <div class='inline'>
           <label class='hide' for='search-bar'>Search</label>
-          <input id='search-bar' type='search' name='search' <?php if(isset($_GET["search"])) echo "value='{$search}'" ?> required/>
+          <input id='search-bar' type='search' name='search' <?php if(isset($_GET["search"])) echo "value='{$search}'" ?> autofocus required/>
           <input id='search-bar-submit' type='submit' value='Search'/>
         </div>
       </fieldset>
@@ -22,13 +22,13 @@ require_once("head.php");
     <div>
       <?php
       if(isset($_GET["search"])) {
-        $select = mysqli_query($connection, "SELECT * FROM signatures WHERE signature LIKE '%{$search}%'");
+        $select = mysqli_query($connection, "SELECT * FROM users WHERE name LIKE '%{$search}%'");
         $rows = mysqli_num_rows($select);
-        echo "<p>{$rows} signature(s) found.</p>";
+        echo "<p>{$rows} user(s) found.</p>";
         while($fetch = mysqli_fetch_assoc($select)) { //t.ly/rJON
-          $sign = $fetch['signature'];
-          $link = "signature.php?sign={$sign}";
-          echo "<hr><p><a href='{$link}'>Visit {$sign}</a>.</p>";
+          $name = $fetch["name"];
+          $link = "user.php?name={$name}";
+          echo "<p><a href='{$link}'>Visit {$name}</a>.</p>";
         }
       };
       ?>
@@ -37,24 +37,22 @@ require_once("head.php");
   <section>
     <div>
       <?php
-      if(IS_LOCALHOST) {
+      if($is_localhost) {
         echo"
-        <form id='mysql-command-line-form' action='search.php' method='POST'>
+        <form id='command-line-form' action='search.php' method='POST'>
           <fieldset>
-            <legend>MySQL Command Line</legend>
+            <legend>Command Line</legend>
             <div class='inline'>
               <label for='mysql-command-line'>Command:</label>
-              <input id='mysql-command-line' type='text' name='mysql-command-line' required/>
+              <input id='mysql-command-line' type='text' name='command-line' required/>
             </div>
             <input id='submit-mysqli-command-line' type='submit' value='Run Command'/>
           </fieldset>
         </form>";
         if(isset($_POST["mysql-command-line"])) {
-          $select = mysqli_query($connection, $_POST["mysql-command-line"]);
-          while($fetch = mysqli_fetch_assoc($select)) { //t.ly/rJON
-            $sign = $fetch['signature'];
-            $link = "signature.php?sign={$sign}";
-            echo "<hr><p><a href='{$link}'>Visit {$sign}</a>.</p>";
+          $select = mysqli_query($connection, $_POST["command-line"]);
+          while($fetch = mysqli_fetch_assoc($select)) {
+            print_r($fetch);
           }
         }
       }

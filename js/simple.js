@@ -16,6 +16,16 @@ window.onload = function() {
   window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
     setColourScheme(getCookie('colourScheme'));
   });
+
+  $$("[type='password']").forEach((item, i) => {
+    var show = false;
+    var name = "[name='show-" + item.name + "']";
+    $(name).addEventListener("click", function(e) {
+      show = !show;
+      $("[name='show-" + item.name + "']").value = show ? "Hide" : "Show";
+      $("[name='" + item.name + "']").type = show ? "text" : "password";
+    });
+  });
 }
 
 function setColourScheme(colourScheme) {
