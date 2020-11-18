@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2020 at 07:50 PM
+-- Generation Time: Nov 18, 2020 at 10:31 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -45,7 +45,7 @@ CREATE TABLE `communities` (
 --
 
 INSERT INTO `communities` (`id`, `created`, `created_by`, `admin`, `name`, `description`, `picture`, `banner`, `subscribers`) VALUES
-(0, '2020-11-17', 9, 9, 'HotPot', 'Welcome to the first community. I created this for a test.', 'images/picture.png', 'images/banner.png', 0);
+(0, '2020-11-17', 9, 9, 'HotPot', 'Welcome to the first community on HotPot.', 'images/picture.png', 'images/banner.png', 0);
 
 -- --------------------------------------------------------
 
@@ -64,14 +64,19 @@ CREATE TABLE `posts` (
   `dislikes` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `posts`
+-- Table structure for table `replies`
 --
 
-INSERT INTO `posts` (`id`, `posted`, `posted_by`, `posted_in`, `title`, `content`, `likes`, `dislikes`) VALUES
-(4, '2020-11-17', 9, '0', 'Hello!', 'Lorem ipsum.', 0, 0),
-(10, '2020-11-17', 9, '0', 'Room Interior - WIP', 'GDFGDFGDFGD', 0, 0),
-(11, '2020-11-17', 9, '0', 'Victorian House', 'dsfsdfsdfsdfsdfrewwr', 0, 0);
+CREATE TABLE `replies` (
+  `id` int(11) NOT NULL,
+  `replied` date NOT NULL DEFAULT current_timestamp(),
+  `reply_by` int(11) NOT NULL,
+  `replied_in` int(11) NOT NULL,
+  `content` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -117,6 +122,12 @@ ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `replies`
+--
+ALTER TABLE `replies`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -136,7 +147,13 @@ ALTER TABLE `communities`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `replies`
+--
+ALTER TABLE `replies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -143,8 +143,11 @@ if(isset($_POST["change-name"])) {
         <input type='submit' name='change-picture' value='Change Picture'/>
       </form>
       <script type='text/javascript'>
-      $("#picture").addEventListener('change', function() { //t.ly/fijM
-        if(this.files[0]) {
+      $('#picture').addEventListener('change', function() { //t.ly/fijM
+        if(this.files[0].size > 1048576) {
+          alert('The image you uploaded is too large. It must be no larger than 1 megabyte.');
+          this.value = '';
+        } else if(this.files[0]) {
           var reader = new FileReader();
           reader.onload = e => {
             $('#my-picture').src = e.target.result;
@@ -155,6 +158,7 @@ if(isset($_POST["change-name"])) {
       </script>
     </article>
     <article>
+      <h3>Change Banner</h3>
       <form action='dashboard.php' method='POST' enctype='multipart/form-data'>
         <figure id='my-banner-figure'>
           <figcaption>My Banner</figcaption>
@@ -167,8 +171,11 @@ if(isset($_POST["change-name"])) {
         <input type='submit' name='change-banner' value='Change Banner'/>
       </form>
       <script type='text/javascript'>
-      $("#banner").addEventListener('change', function() { //t.ly/fijM
-        if(this.files[0]) {
+      $("#banner").addEventListener('change', function() {
+        if(this.files[0].size > 2097152) {
+          alert('The image you uploaded is too large. It must be no larger than 2 megabytes.');
+          this.value = '';
+        } else if(this.files[0]) {
           var reader = new FileReader();
           reader.onload = e => {
             $('#my-banner').src = e.target.result;

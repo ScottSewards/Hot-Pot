@@ -29,13 +29,12 @@ if(isset($_POST["send-email"])) {
 ?>
 <main>
   <section>
-    <img class='banner' src='<?php echo $banner; ?>' alt='Banner'/>
-    <img class='picture' src='<?php echo $picture; ?>' alt='Picture'/>
+    <img class='banner' <?php echo "src='{$banner}' alt='Banner for {$name}'"; ?> height='100%' width='100%'/>
+    <img class='picture' <?php echo "src='{$picture}' alt='Picture for {$name}'"; ?> height='100%' width='100%'/>
     <h1><?php echo $name; ?></h1>
     <p><?php echo "User since {$created}."; ?></p>
     <hr>
     <?php
-
     if(isset($my_id) and $can_email == true) {
       echo "
       <h2>Contact</h2>
@@ -58,20 +57,113 @@ if(isset($_POST["send-email"])) {
         </div>
         <input type='submit' name='send-email' value='Send Email'/>
       </form>";
-    } else if(isset($my_id)) echo "<p>This user has disabled contact..</p>";
+    } else if(isset($my_id)) echo "<p>This user has disabled contact.</p>";
+    else echo "<p>Sign-in to contact this user.</p>";
     ?>
   </section>
-  <!--section>
-    <h2><?php echo "{$name} is Playing"; ?></h2>
-    <div id='track'>
-      <div id='track-art'>
-        <img id='track-cover' title='Rammstein Album Cover' src='images/rammstein.jpg' alt='Rammstein Album Cover'/>
-      </div>
-      <div id='track-information'>
-        <h3 id='track-artist'>Rammstein by Rammstein</h3>
-      </div>
-    </div>
-  </section-->
+
+  <section id='communities'>
+    <h2>Communities</h2>
+    <article id='communities-created'>
+      <h3>Created</h3>
+      <?php
+      $select_created_communities = mysqli_query($connection, "SELECT * FROM communities WHERE created_by='{$id}' ORDER BY id DESC");
+      if(mysqli_num_rows($select_created_communities) > "0") {
+        echo "<div class='communities'>";
+        while($fetch_created_communities = mysqli_fetch_array($select_created_communities)) {
+          $created_community_created = $fetch_created_communities["created"];
+          $created_community_name = $fetch_created_communities["name"];
+          $created_community_picture = $fetch_created_communities["picture"];
+          echo "
+          <div class='community'>
+            <img src='{$created_community_picture}' alt='Picture for {$created_community_name}' height='100%' width='100%'/>
+            <div class='meta'>
+              <span><a href='community.php?name={$created_community_name}'>{$created_community_name}</a></span>
+              <span>created {$created_community_created}</span>
+            </div>
+          </div>";
+        }
+        echo "</div>";
+      } else echo "<p>{$name} has not created any communities yet.</p>";
+      ?>
+    </article>
+    <h3>Administrating</h3>
+    <?php
+    $select_administrating_communities = mysqli_query($connection, "SELECT * FROM communities WHERE admin='{$id}' ORDER BY id DESC");
+    if(mysqli_num_rows($select_administrating_communities) > "0") {
+      echo "<div class='communities'>";
+      while($fetch_administrating_communities = mysqli_fetch_array($select_administrating_communities)) {
+        $administrating_community_created = $fetch_administrating_communities["created"];
+        $administrating_community_name = $fetch_administrating_communities["name"];
+        $administrating_community_picture = $fetch_administrating_communities["picture"];
+        echo "
+        <div class='community'>
+          <img src='{$administrating_community_picture}' alt='Picture for {$administrating_community_picture}' height='100%' width='100%'/>
+          <div class='meta'>
+            <span><a href='community.php?name={$administrating_community_name}'>{$administrating_community_name}</a></span>
+            <span>created {$administrating_community_created}</span>
+          </div>
+        </div>";
+      }
+      echo "</div>";
+    } else echo "<p>{$name} is not admin for any communities yet.</p>";
+    ?>
+  </section>
+
+  <section id='posts'>
+    <h2>Posts</h2>
+    <?php
+    $select_posts = mysqli_query($connection, "SELECT * FROM posts WHERE posted_by='{$id}' ORDER BY id DESC");
+    if(mysqli_num_rows($select_posts) > "0") {
+      echo "<div class='posts'>";
+      while($fetch_post = mysqli_fetch_array($select_posts)) {
+        $posted = $fetch_post["posted"];
+        $posted_in = $fetch_post["posted_in"];
+        $select_posted_in = mysqli_query($connection, "SELECT name FROM communities WHERE id='{$posted_in}'");
+        $fetch_posted_by = mysqli_fetch_array($select_posted_in);
+        $posted_in = $fetch_posted_by["name"];
+        $title = $fetch_post["title"];
+        $content = $fetch_post["content"];
+        $likes = $fetch_post["likes"];
+        $dislikes = $fetch_post["dislikes"];
+        echo "
+        <div class='post'>
+          <p><a href='post.php?title={$title}'>{$title}</a> posted in <a href='community.php?name={$posted_in}'>{$posted_in}</a> on {$posted}.</p>
+          <p>{$likes} likes and {$dislikes} dislikes.</p>
+        </div>";
+      }
+      echo "</div>";
+    } else echo "<p>{$name} has not posted to any communities yet.</p>";
+    ?>
+  </section>
+
+  <section id='replies'>
+    <h2>Replies</h2>
+    <?php
+    $select_replies = mysqli_query($connection, "SELECT * FROM replies WHERE reply_by='{$id}' ORDER BY id DESC");
+    if(mysqli_num_rows($select_replies) > "0") {
+      echo "<div class='replies'>";
+      while($fetch_replies = mysqli_fetch_array($select_replies)) {
+        $replied = $fetch_replies["replied"];
+        $replied_in = $fetch_replies["replied_in"];
+        $select_replied_in = mysqli_query($connection, "SELECT * FROM posts WHERE id='{$replied_in}'");
+        $fetch_replied_in = mysqli_fetch_array($select_replied_in);
+        $replied_in_name = $fetch_replied_in["title"];
+        $posted_in = $fetch_replied_in["posted_in"];
+        $select_posted_in = mysqli_query($connection, "SELECT name FROM communities WHERE id='{$posted_in}'");
+        $fetch_posted_in = mysqli_fetch_array($select_posted_in);
+        $posted_in_name = $fetch_posted_in["name"];
+        $content = $fetch_replies["content"];
+        echo "
+        <div class='reply'>
+          <p>Replied in <a href='post.php?title={$replied_in_name}'>{$replied_in_name}</a> on <a href='community.php?name={$posted_in_name}'>{$posted_in_name}</a> on {$replied}.</p>
+          <p>{$content}</p>
+        </div>";
+      }
+      echo "</div>";
+    } else echo "<p>{$name} has not replied to any posts yet.</p>";
+    ?>
+  </section>
 </main>
 <?php
 require_once("foot.php");

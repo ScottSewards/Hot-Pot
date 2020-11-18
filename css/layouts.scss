@@ -1,6 +1,7 @@
 body, body * {
   box-sizing: border-box;
 }
+
 body {
   background: var(--col-white);
   color: var(--col-black);
@@ -17,15 +18,17 @@ body {
   "main"
   "foot";
   margin: 0;
-  transition: background-color var(--transition-time);
+  transition: background-color var(--transition-time), opacity 0.2s;
 }
 
 nav {
   user-select: none;
   background: var(--col-theme);
-  color: var(--col-black);
+  color: var(--col-white);
   font-weight: bold;
   z-index: 100;
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
   grid-area: navi;
@@ -48,6 +51,7 @@ nav {
       }
       &:hover, &.active {
         background: var(--col-white);
+        color: var(--col-black);
       }
     }
     div {
@@ -74,6 +78,7 @@ aside#content {
 
 main {
   grid-area: main;
+  padding: 0 var(--space);
   margin: auto;
   width: 100%;
   max-width: var(--character-limit);
@@ -91,6 +96,10 @@ footer {
   display: block;
   grid-area: foot;
   width: 100%;
+  div {
+    margin: auto;
+    max-width: var(--character-limit);
+  }
 }
 
 //min-width MUST EQUAL --character-limit

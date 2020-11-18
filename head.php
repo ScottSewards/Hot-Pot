@@ -19,6 +19,7 @@ if(!in_array($ip_address, array("127.0.0.1", "::1"))) {
   $connection = mysqli_connect("localhost", "root", "", "hotpot") or die(); //DO NOT die IN PRODUCTION
 }
 
+
 session_start();
 if(isset($_GET["sign-out"])) session_destroy();
 if(isset($_SESSION["id"])) $my_id = $_SESSION["id"];
@@ -27,6 +28,8 @@ if(isset($_SESSION["email"])) $my_email = $_SESSION["email"];
 if(isset($_SESSION["can_email"])) $my_can_email = $_SESSION["can_email"];
 if(isset($_SESSION["picture"])) $my_picture = $_SESSION["picture"];
 if(isset($_SESSION["banner"])) $my_banner = $_SESSION["banner"];
+
+header("Cache-Control: max-age=84600");
 ?>
 <!DOCTYPE html>
 <html lang='en' dir='ltr'>
@@ -46,28 +49,26 @@ if(isset($_SESSION["banner"])) $my_banner = $_SESSION["banner"];
     <script type='text/javascript' src='js/simple.js'></script>
   </head>
   <body>
+    <script type="text/javascript">
+    $('body').style.opacity = 0;
+    </script>
     <nav>
       <div>
         <a id='index-link' href='index.php'>Index</a>
         <a id='search-link' href='search.php'>Search</a>
-        <a id='settings-link' href='settings.php'>Settings</a>
-        <ul>
-        </ul>
       </div>
       <div>
-        <p>MySign</p>
-        <div>
-          <?php
-          if(isset($my_name)) {
-            echo "<a id='dashboard-link' href='dashboard.php'>Dashboard</a>";
-            //$url = str_replace("?sign-out", "", $_SERVER['REQUEST_URI']);
-            //echo "<a id='sign-out-link' href='{$url}?sign-out'>Sign-out</a>";
-          } else {
-            echo "<a id='sign-in-link' href='sign-in.php'>Sign-in</a>";
-            echo "<a id='sign-up-link' href='sign-up.php'>Sign-up</a>";
-          }
-          ?>
-        </div>
+        <?php
+        if(isset($my_name)) {
+          echo "<a id='dashboard-link' href='dashboard.php'>Dashboard</a>";
+          //$url = str_replace("?sign-out", "", $_SERVER['REQUEST_URI']);
+          //echo "<a id='sign-out-link' href='{$url}?sign-out'>Sign-out</a>";
+        } else {
+          echo "<a id='sign-in-link' href='sign-in.php'>Sign-in</a>";
+          echo "<a id='sign-up-link' href='sign-up.php'>Sign-up</a>";
+        }
+        ?>
+        <a id='settings-link' href='settings.php'>Settings</a>
       </div>
     </nav>
     <aside class='hide'>

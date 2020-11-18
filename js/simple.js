@@ -2,21 +2,37 @@
 const $ = (css, parent = document) => parent.querySelector(css);
 const $$ = (css, parent = document) => Array.from(parent.querySelectorAll(css));
 
-//APPLY THEME COLOUR
 var themeColourHue = getCookie('themeColourHue');
 if(themeColourHue !== null) document.documentElement.style.setProperty('--col-theme-hue', themeColourHue);
 
-//APPLY COLOUR SCHEME
 var colourScheme = getCookie('colourScheme');
 if(colourScheme !== null) setColourScheme(colourScheme);
 
 window.onload = function() {
   addRibbon();
+  addShowPassword();
 
   window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
     setColourScheme(getCookie('colourScheme'));
   });
 
+  endPreloader();
+}
+
+window.onbeforeunload = function(){
+  startPreloader();
+};
+
+function startPreloader() {
+  fade("body", "out");
+  //ADD ELEMENT
+}
+
+function endPreloader() {
+  fade("body", "in");
+}
+
+function addShowPassword() {
   $$("[type='password']").forEach((item, i) => {
     var show = false;
     var name = "[name='show-" + item.name + "']";
@@ -66,3 +82,16 @@ function addRibbon() {
     console.log(e);
   }
 }
+
+function fade(element, state) {
+  $(element).style.opacity = state == "in" ? 1 : 0;
+}
+
+/*
+//https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
+//https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText
+function copyToClipboard() {
+  //navigator.clipboard.writeText().then(e => alert(e));
+}
+
+*/
