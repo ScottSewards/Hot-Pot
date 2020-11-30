@@ -1,5 +1,5 @@
     <footer>
-      <p>Copyright (c) 2020 Copyright Holder All Rights Reserved.</p>
+      <p>© 2020 Scott Sewards</p>
     </footer>
   </body>
 </html>

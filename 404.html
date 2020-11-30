@@ -1,26 +1,67 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang='en' dir='ltr'>
 	<head>
-		<meta charset="utf-8">
+		<meta charset='utf-8'>
 		<title>404</title>
-		<link rel='stylesheet' type='text/css' href='css/variables.min.css'/>
-    <link rel='stylesheet' type='text/css' href='css/content.min.css'/>
-    <link rel='stylesheet' type='text/css' href='css/layouts.min.css'/>
-    <link rel='stylesheet' type='text/css' href='css/components.min.css'/>
+		<link rel='stylesheet' type='text/css' href='css/variables.min.css'>
+    <link rel='stylesheet' type='text/css' href='css/content.min.css'>
+    <link rel='stylesheet' type='text/css' href='css/layouts.min.css'>
+    <link rel='stylesheet' type='text/css' href='css/components.min.css'>
+		<script type='text/javascript' src='js/simple.js'>
+		</script>
+		<style media="screen">
+			#button {
+				cursor: pointer;
+				background: #222;
+				background: var(--col-theme);
+				position: absolute;
+				display: flex;
+				justify-content: center;
+  			align-items: center;
+				border-radius: 100%;
+				transition: background var(--transition-time);
+			}
+			#button:hover {
+				background: var(--col-hover);
+			}
+			#button h2 {
+				font-size: 200%;
+				margin: 0;
+				height: auto;
+				width: auto;
+			}
+			@media (orientation: landscape) {
+				#button {
+					top: 12.5%;
+					left: 50%;
+					height: 75vh;
+					width: 75vh;
+					height: 75%;
+					transform: translate(-50%, 0);
+				}
+			}
+			@media (orientation: portrait) {
+				#button {
+					top: 50%;
+					left: 12.5%;
+					height: 75vw;
+					width: 75vw;
+					transform: translate(0, -50%);
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<main>
-			<section>
-				<h1>Error 404 Page Not Found</h1>
-				<form>
-					<input id='go-back' type='button' name='go-back' value='Go Back' onclick='goBack()'/>
-				</form>
-				<script type='text/javascript'>
-				function goBack() {
-				  window.history.back();
-				}
-				</script>
-			</section>
+			<h1>404, Page Not Found, </h1>
+			<div id='button'>
+				<h2>Click to Return</h2>
+			</div>
+			<script type='text/javascript'>
+			$('#button').addEventListener('click', function() {
+				window.history.back();
+			});
+			</script>
 		</main>
 	</body>
 </html>

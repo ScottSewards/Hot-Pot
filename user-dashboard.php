@@ -2,7 +2,7 @@
 $title = "Dashboard";
 require_once("head.php");
 
-if(!isset($my_id)) redirect("sign-in.php");
+if(!isset($my_id)) direct_to("sign-in.php");
 
 if(isset($_POST["change-name"])) {
   $name = htmlspecialchars(addslashes($_POST["name"]));
@@ -11,7 +11,7 @@ if(isset($_POST["change-name"])) {
   else {
     $update = mysqli_query($connection, "UPDATE users SET name='{$name}' WHERE id='{$my_id}'");
     $_SESSION["name"] = $name;
-    redirect("dashboard.php");
+    direct_to("user-dashboard.php");
   }
 } else if(isset($_POST["change-email"])) {
   $email = htmlspecialchars(addslashes($_POST["email"]));
@@ -20,14 +20,14 @@ if(isset($_POST["change-name"])) {
   else {
     $update = mysqli_query($connection, "UPDATE users SET email='{$email}' WHERE id='{$my_id}'");
     $_SESSION["email"] = $email;
-    redirect("dashboard.php");
+    direct_to("user-dashboard.php");
   }
 } else if(isset($_POST["update-email-settings"])) {
-  $can_email = htmlspecialchars(addslashes($_POST["can-email"]));
-  $can_email = $can_email == "on" ? 1 : 0;
-  mysqli_query($connection, "UPDATE users SET can_email='{$can_email}' WHERE id='{$my_id}'");
-  $_SESSION["can_email"] = $can_email;
-  redirect("dashboard.php");
+  $show_contact_form = htmlspecialchars(addslashes($_POST["show-contact-form"]));
+  $show_contact_form = $show_contact_form == "on" ? 1 : 0;
+  mysqli_query($connection, "UPDATE users SET show_contact_form='{$show_contact_form}' WHERE id='{$my_id}'");
+  $_SESSION["show_contact_form"] = $show_contact_form;
+  direct_to("user-dashboard.php");
 } else if(isset($_POST["change-password"])) {
   $old_password = htmlspecialchars(addslashes($_POST["old-password"]));
   $select = mysqli_query($connection, "SELECT password FROM users WHERE id='{$my_id}'");
@@ -36,7 +36,7 @@ if(isset($_POST["change-name"])) {
     $new_password = htmlspecialchars(addslashes($_POST["new-password"]));
     $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
     mysqli_query($connection, "UPDATE users SET password='{$password_hash}' WHERE id='{$my_id}'");
-    redirect("dashboard.php");
+    direct_to("user-dashboard.php");
   } else echo "Your old password was incorrect.";
 } else if(isset($_POST["change-picture"])) {
   if(!empty($_FILES["picture"])) {
@@ -51,7 +51,7 @@ if(isset($_POST["change-name"])) {
       rename("images/pictures/{$file_name}", "{$path_and_file_name}");
       mysqli_query($connection, "UPDATE users SET picture='{$path_and_file_name}' WHERE id='{$my_id}'");
       $_SESSION["picture"] = $path_and_file_name;
-      redirect("dashboard.php");
+      direct_to("user-dashboard.php");
     } else echo "Your file was not uploaded.";
   }
 } else if(isset($_POST["change-banner"])) {
@@ -67,7 +67,7 @@ if(isset($_POST["change-name"])) {
       rename("images/banners/{$file_name}", "{$path_and_file_name}");
       $update = mysqli_query($connection, "UPDATE users SET banner='{$path_and_file_name}' WHERE id='{$my_id}'");
       $_SESSION["banner"] = $path_and_file_name;
-      redirect("dashboard.php");
+      direct_to("user-dashboard.php");
     } else echo "Your file was not uploaded.";
   }
 }
@@ -78,69 +78,69 @@ if(isset($_POST["change-name"])) {
     <h2>User Settings</h2>
     <article>
       <h3>Change Name</h3>
-      <form action='dashboard.php' method='POST'>
+      <form method='POST'>
         <div class='inline'>
           <label for='name'>Name*</label>
-          <input id='name' type='text' name='name' placeholder='<?php echo $my_name; ?>' required/>
+          <input id='name' type='text' name='name' placeholder='<?php echo $my_name; ?>' required>
         </div>
-        <input type='submit' name='change-name' value='Change Name'/>
+        <input type='submit' name='change-name' value='Change Name'>
       </form>
     </article>
     <article>
       <h3>Change Email</h3>
-      <form action='dashboard.php' method='POST'>
+      <form method='POST'>
         <div class='inline'>
           <label for='email'>Email*</label>
-          <input id='email' type='email' name='email' placeholder='<?php echo $my_email ?>' required/>
+          <input id='email' type='email' name='email' placeholder='<?php echo $my_email ?>' required>
         </div>
-        <input type='submit' name='change-email' value='Change Email'/>
+        <input type='submit' name='change-email' value='Change Email'>
       </form>
     </article>
     <article>
       <h3>Change Email Settings</h3>
-      <form action='dashboard.php' method='POST'>
+      <form method='POST'>
         <div class='inline'>
-          <label for='can-email'>Allow other users to email me</label>
-          <input id='can-email' type='checkbox' name='can-email' <?php if($my_can_email == true) echo "checked"; ?>/>
+          <label for='show-contact-form'>Accept contact from other users</label>
+          <input id='show-contact-form' type='checkbox' name='show-contact-form' <?php if($my_show_contact_form == true) echo "checked"; ?>>
         </div>
-        <div class='inline'>
+        <div class='inline hide'>
           <label for='send-newsletter'>Subscribe to the Hot Pot newsletter</label>
-          <input id='send-newsletter' type='checkbox' name='send-newsletter' disabled/>
+          <input id='send-newsletter' type='checkbox' name='send-newsletter' disabled>
         </div>
-        <input type='submit' name='update-email-settings' value='Update Email Settings'/>
+        <input type='submit' name='update-email-settings' value='Update Email Settings'>
       </form>
     </article>
     <article>
       <h3>Change Password</h3>
-      <form action='dashboard.php' method='POST'>
+      <form method='POST'>
         <div class='inline'>
           <label for='old-password'>Old Password*</label>
-          <input id='old-password' type='password' name='old-password' autocomplete='off' required/>
+          <input id='old-password' type='password' name='old-password' autocomplete='off' required>
           <input type='button' value='Show' name='show-old-password'>
         </div>
         <div class='inline'>
           <label for='new-password'>New Password*</label>
-          <input id='new-password' type='password' name='new-password' autocomplete='off' required/>
+          <input id='new-password' type='password' name='new-password' autocomplete='off' required>
           <input type='button' value='Show' name='show-new-password'>
         </div>
         <div class='inline'>
-          <input type='submit' name='change-password' value='Change Password'/>
-          <input type='submit' name='reset-password' value='Reset Password' disabled/>
+          <input type='submit' name='change-password' value='Change Password'>
+          <input type='submit' name='reset-password' value='Reset Password' disabled>
         </div>
       </form>
     </article>
     <article>
       <h3>Change Picture</h3>
-      <form action='dashboard.php' method='POST' enctype='multipart/form-data'>
+      <form method='POST' enctype='multipart/form-data'>
         <figure id='my-picture-figure'>
           <figcaption>My Picture</figcaption>
-          <img id='my-picture' src='<?php echo $my_picture; ?>' alt='My Picture'/>
+          <img id='my-picture' src='<?php echo $my_picture; ?>' alt='My Picture'>
         </figure>
         <div class='inline'>
           <label for='picture'>Image*</label>
-          <input id='picture' type='file' name='picture' accept='image/jpeg, image/gif, image/png' required/>
+          <input id='picture' type='file' name='picture' accept='image/jpeg, image/gif, image/png' required>
         </div>
-        <input type='submit' name='change-picture' value='Change Picture'/>
+        <input type='submit' name='change-picture' value='Change Picture' disabled>
       </form>
       <script type='text/javascript'>
       $('#picture').addEventListener('change', function() { //t.ly/fijM
@@ -159,16 +159,16 @@ if(isset($_POST["change-name"])) {
     </article>
     <article>
       <h3>Change Banner</h3>
-      <form action='dashboard.php' method='POST' enctype='multipart/form-data'>
+      <form method='POST' enctype='multipart/form-data'>
         <figure id='my-banner-figure'>
           <figcaption>My Banner</figcaption>
-          <img id='my-banner' src='<?php echo $my_banner; ?>' alt='My Banner'/>
+          <img id='my-banner' src='<?php echo $my_banner; ?>' alt='My Banner'>
         </figure>
         <div class='inline'>
           <label for='banner'>Image*</label>
-          <input id='banner' type='file' name='banner' accept='image/jpeg, image/gif, image/png' required/>
+          <input id='banner' type='file' name='banner' accept='image/jpeg, image/gif, image/png' required>
         </div>
-        <input type='submit' name='change-banner' value='Change Banner'/>
+        <input type='submit' name='change-banner' value='Change Banner' disabled>
       </form>
       <script type='text/javascript'>
       $("#banner").addEventListener('change', function() {

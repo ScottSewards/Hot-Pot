@@ -79,7 +79,7 @@ function addRibbon() {
     var link = pathname[window.location.hostname === 'localhost' ? 1 : 0].split('.');
     $('#' + link[0] + '-link').classList.add('active');
   } catch (e) {
-    console.log(e);
+    //console.log(e);
   }
 }
 
