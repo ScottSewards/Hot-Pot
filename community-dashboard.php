@@ -4,12 +4,12 @@ require_once("head.php");
 
 //GET MY COMMUNITIES
 
-if(!isset($my_id)) direct_to("sign-in.php");
+//if(!isset($my_id)) direct_to("sign-in.php");
 
-$select_moderated_communities = mysqli_query($connection, "SELECT * FROM communities WHERE moderated_by='{$my_id}'");
-if(mysqli_num_rows($select_moderated_communities) > "0") {
+//$select_moderated_communities = mysqli_query($connection, "SELECT * FROM communities WHERE moderated_by='{$my_id}'");
+//if(mysqli_num_rows($select_moderated_communities) > "0") {
 
-} else echo "<p>You do not moderate any communities yet.</p>";
+//} else echo "<p>You do not moderate any communities yet.</p>";
 ?>
 <main>
   <h1>Community Dashboard</h1>

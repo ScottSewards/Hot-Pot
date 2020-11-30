@@ -1,7 +1,7 @@
 <?php
 if(!isset($_GET["name"])) {
   mysqli_close($connection);
-  direct_to("404.html");
+  head_to("404.html");
 } else $community_name = $_GET["name"];
 
 $title = "{$community_name} Community";
@@ -16,7 +16,7 @@ if(mysqli_num_rows($select_community) == "1") {
   $select_community_created_by_name = mysqli_query($connection, "SELECT name FROM users WHERE id='{$community_created_by}'");
   $fetch_community_created_by_name = mysqli_fetch_array($select_community_created_by_name);
   $community_created_by_name = $fetch_community_created_by_name["name"];
-  $community_moderated_by = $fetch_community["moderated_by"];
+  $community_moderated_by = "1";
   if($community_created_by == $community_moderated_by) $community_moderated_by_name = $community_created_by_name;
   else {
     $select_community_moderated_by_name = mysqli_query($connection, "SELECT name FROM users WHERE id='{$community_moderated_by}'");
@@ -29,16 +29,15 @@ if(mysqli_num_rows($select_community) == "1") {
   //SUBSCRIBERS
 } else {
   mysqli_close($connection);
-  direct_to("404.html");
+  head_to("404.html");
 }
 
 if(isset($_POST["post"])) {
-  $new_post_posted = date("Y-m-d G:i:s");
   $new_post_posted_by = $my_id;
   $new_post_posted_in = $community_id;
   $new_post_title = htmlspecialchars(addslashes($_POST["title"]));
   $new_post_content = htmlspecialchars(addslashes($_POST["content"]));
-  mysqli_query($connection, "INSERT INTO posts (posted, posted_by, posted_in, title, content) VALUES ('{$new_post_posted}', '{$new_post_posted_by}', '{$new_post_posted_in}', '{$new_post_title}', '{$new_post_content}')");
+  mysqli_query($connection, "INSERT INTO posts (posted, posted_by, posted_in, title, content) VALUES ('{$datetime}', '{$new_post_posted_by}', '{$new_post_posted_in}', '{$new_post_title}', '{$new_post_content}')");
   direct_to("community.php?name={$community_name}");
 }
 
@@ -48,23 +47,31 @@ if(isset($_POST["pin-post"])) {
   if($is_pinned) {
     mysqli_query($connection, "UPDATE posts SET pinned='{$post_pinned_date}', pinned_by='{$my_id}' WHERE id='{$post_pinned_id}'");
   } else {
-    $post_pinned_date = date("Y-m-d G:i:s");
     $post_pinned_id = $_POST["post-id"];
-    mysqli_query($connection, "UPDATE posts SET pinned='{$post_pinned_date}', pinned_by='{$my_id}' WHERE id='{$post_pinned_id}'");
+    mysqli_query($connection, "UPDATE posts SET pinned='{$datetime}', pinned_by='{$my_id}' WHERE id='{$post_pinned_id}'");
   }
 }
 
-$select_subscriber = mysqli_query($connection, "SELECT * FROM user_subscriptions WHERE subscribed='{$community_id}', subscriber='{$my_id}'");
-$select_exists = mysqli_num_rows($select_subscriber);
-$select_is_subscribed = 0;
-$subscribe_value = $select_is_subscriber > "0" ? "Unsubscribe" : "Subscribe";
-$fetch_subscriber = mysqli_fetch_array($select_subscriber);
-if(isset($_POST["subscribe"])) {
-  if($select_is_subscribed > "0") { //UNSUBSCRIBE
+$select_follower = mysqli_query($connection, "SELECT * FROM community_follows WHERE follower='{$my_id}' AND following='{$community_id}'");
+$select_follower_exists = mysqli_num_rows($select_follower);
+if($select_follower_exists == "1") {
+  $fetch_follower = mysqli_fetch_array($select_follower);
+  $select_is_following = $fetch_follower["followed"];
+} else $select_is_following = 0;
 
-  } else { //SUBSCRIBE
+$follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
 
+if(isset($_POST["follow"])) {
+  if($select_follower_exists > "0") {
+    if($select_is_following == "1") { //UNSUBSCRIBE
+      mysqli_query($connection, "UPDATE community_follows SET followed='0', unfollowed_on='{$datetime}'");
+    } else { //SUBSCRIBE
+      mysqli_query($connection, "UPDATE community_follows SET followed='1', followed_on='{$datetime}'");
+    }
+  } else { //CREATE SUBSCRIPTION
+    mysqli_query($connection, "INSERT INTO community_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$community_id}')");
   }
+  head_to("community.php?name={$community_name}");
 }
 ?>
 <main>
@@ -82,7 +89,7 @@ if(isset($_POST["subscribe"])) {
     //
     echo "
     <form class='less' method='POST'>
-      <input class='centre' type='submit' name='subscribe' value='{$subscribe_value}'>
+      <input class='centre' type='submit' name='follow' value='{$follow_value}'>
     </form>";
     ?>
   </section>
@@ -94,10 +101,10 @@ if(isset($_POST["subscribe"])) {
     echo "<div class='sorters'>";
     if($sort_posts_by == "newest") {
       $select_posts = mysqli_query($connection, "SELECT * FROM posts WHERE posted_in='{$community_id}' ORDER BY id DESC");
-      echo "<p><a class='sorter' href='{$full_url}&sort=oldest'>Sort by oldest</a></p>";
+      //echo "<p><a class='sorter' href='{$full_url}&sort=oldest'>Sort by oldest</a></p>";
     } else if($sort_posts_by = "oldest") {
       $select_posts = mysqli_query($connection, "SELECT * FROM posts WHERE posted_in='{$community_id}' ORDER BY id");
-      echo "<p><a class='sorter' href='{$full_url}&sort=newest'>Sort by newest</a></p>";
+      //echo "<p><a class='sorter' href='{$full_url}&sort=newest'>Sort by newest</a></p>";
     }
     echo "</div>";
 

@@ -42,6 +42,7 @@ function email_verification() {
 }
 
 function sign_in($fetch_sign_in) {
+  $_SESSION["signed_in"] = true;
   $_SESSION["id"] = $fetch_sign_in["id"];
   $_SESSION["created"] = $fetch_sign_in["created"];
   $_SESSION["name"] = $fetch_sign_in["name"];
@@ -53,18 +54,13 @@ function sign_in($fetch_sign_in) {
   $_SESSION["show_contact_form"] = $fetch_sign_in["show_contact_form"];
   $_SESSION["picture"] = $fetch_sign_in["picture"];
   $_SESSION["banner"] = $fetch_sign_in["banner"];
-
-  $signed_in = date("Y-m-d G:i:s");
   $user_id = $fetch["id"];
-  mysqli_query($connection, "INSERT INTO user_sign_ins(signed_in, user_id, ip_address) VALUES ('{$signed_in}', '{$user_id}', '{$ip_address}')");
+  mysqli_query($connection, "INSERT INTO user_sign_ins(signed_in, user_id, ip_address) VALUES ('{$datetime}', '{$user_id}', '{$ip_address}')");
   head_to("user-dashboard.php");
 }
 
-function sign_up() {
-  sign_in();
-}
-
 function sign_out() {
-  $_SESSOIN["signed_in"] = false;
+  session_destroy();
+  $_SESSION["signed_in"] = false;
 }
 ?>
