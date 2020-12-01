@@ -1,21 +1,19 @@
 <?php
 if(!isset($_GET["name"])) {
   mysqli_close($connection);
-  direct_to("404.html");
+  head_to("404.html");
 } else $user_name = $_GET["name"];
 
-$title = "{$user_name} User";
+$title = "{$user_name}";
 require_once("head.php");
 
 $select_user = mysqli_query($connection, "SELECT * FROM users WHERE name='{$user_name}'");
 if(mysqli_num_rows($select_user) == "1") {
-  $fetch_user = mysqli_fetch_array($select_user);
+  $fetch_user = mysqli_fetch_assoc($select_user);
   $user_id = $fetch_user["id"];
   $user_created = $fetch_user["created"];
   $user_description = $fetch_user["description"];
   $user_email = $fetch_user["email"];
-  $user_verified = $fetch_user["verified"];
-  $user_shows_contact_form = $fetch_user["show_contact_form"];
   $user_picture = $fetch_user["picture"];
   $user_banner = $fetch_user["banner"];
 } else {
@@ -55,26 +53,15 @@ if(isset($_POST["follow"])) {
     $user_created_to_new_date = date("jS F Y", strtotime($user_created));
     echo "<p class='centre'>User since {$user_created_to_new_date}</p>";
 
-    if(isset($my_id) and $user_shows_contact_form == true) {
-      echo "
-      <hr>
-      <h2>Contact</h2>
-      <form method='POST'>
-        <div class='inline'>
-          <label for=email-subject>Subject*</label>
-          <input id='email-subject' type='text' name='subject' placeholder='' required>
-        </div>
-        <div class='inline'>
-          <label for='email-message'>Message*</label>
-          <textarea id='email-message' name='message' min='10' required></textarea>
-        </div>
-        <input type='submit' name='send-email' value='Send Email'>
-      </form>";
-    } else if(isset($my_id)) echo "<p>{$user_name} has chose to not show a contact form.</p>";
-
     echo "
     <form class='less' method='POST'>
       <input class='centre' type='submit' name='follow' value='{$follow_value}'>
+    </form>";
+
+    $friend_value = "Friend"; //"UNFRIEND"
+    echo "
+    <form class='less' method='POST'>
+      <input class='centre' type='submit' name='friend' value='{$friend_value}'>
     </form>";
     ?>
   </section>

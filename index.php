@@ -5,7 +5,7 @@ require_once("head.php");
   <h1>Index</h1>
   <section id='posts'>
     <h2>Posts</h2>
-    <form class='less hide' method='POST'>
+    <form class='less' method='POST'>
       <div class='inline'>
         <label for='sort-posts-by'>Sort By</label>
         <select id='sort-posts-by' name='sort-by'>
@@ -16,6 +16,7 @@ require_once("head.php");
       </div>
     </form>
     <?php
+    /*
     if(isset($_GET["sort"])) $sort_posts_by = $_GET["sort"];
     else $sort_posts_by = "newest";
     echo "<div class='sorters'>";
@@ -27,7 +28,8 @@ require_once("head.php");
       echo "<p><a class='sorter' href='?sort=newest'>Sort by newest</a></p>";
     }
     echo "</div>";
-
+    */
+    $select_posts = mysqli_query($connection, "SELECT * FROM posts ORDER BY id DESC LIMIT 10");
     if(mysqli_num_rows($select_posts) > "0") {
       echo "<div class='posts'>";
       while($fetch_post = mysqli_fetch_array($select_posts)) {
@@ -72,35 +74,9 @@ require_once("head.php");
       ?>
     </div>
   </section>
-  <section>
-    <h2>Create a Community</h2>
-    <?php
-    if(isset($_POST["create-community"])) {
-      $new_community_created = date("Y-m-d G:i:s");
-      $new_community_created_by = $my_id;
-      $new_community_moderated_by = $new_community_created_by;
-      $new_community_name = htmlspecialchars(addslashes($_POST["community-name"]));
-      $new_community_description = htmlspecialchars(addslashes($_POST["community-description"]));
-      mysqli_query($connection, "INSERT INTO communities (created, created_by, moderated_by, name, description) VALUES ('{$new_community_created}', '{$new_community_created_by}', '{$new_community_moderated_by}', '{$new_community_name}', '{$new_community_description}')");
-      direct_to("community.php?name={$new_community_name}");
-    }
-
-    if(isset($my_id)) {
-      echo "
-      <form method='POST'>
-        <div>
-          <label for='community-name'>Community Name</label>
-          <input id='community-name' type='text' name='community-name' required>
-        </div>
-        <div>
-          <label for='community-description'>Content</label>
-          <textarea id='community-description' name='community-description' required></textarea>
-        </div>
-        <input type='submit' name='create-community' value='Create Community'>
-      </form>";
-    } else echo "<p>Sign-in to create a community.</p>";
-    ?>
-  </section>
+  <?php
+  if($signed_in) include_once("templates/create-community.php");
+  ?>
 </main>
 <?php
 require_once("foot.php");

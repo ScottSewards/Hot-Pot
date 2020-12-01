@@ -4,7 +4,6 @@ if(!empty($_SESSION["signed_in"]) and $_SESSION["signed_in"] == true) head_to("u
 $title = "Sign-in";
 require_once("head.php");
 
-
 if(isset($_POST["sign-in"])) {
   $sign_in_email = htmlspecialchars(addslashes($_POST["sign-in-email"]));
   $sign_in_password = htmlspecialchars(addslashes($_POST["sign-in-password"]));
@@ -15,6 +14,10 @@ if(isset($_POST["sign-in"])) {
       sign_in($fetch_sign_in_by_email);
     } else $error = "Your email or passward was incorrect.";
   } else $error = "Your email or passward was incorrect.";
+}
+
+if(isset($_POST["sign-out"])) {
+  sign_out();
 }
 ?>
 <main>
@@ -41,6 +44,11 @@ if(isset($_POST["sign-in"])) {
       <?php if(isset($error)) echo "<output name='sign-in-output'>{$error}</output>"?>
     </form>
     <p>If you don't have an account, you can <a href='sign-up.php'>sign-up here</a>.</p>
+  </section>
+  <section>
+    <form class='less' method='POST'>
+      <input type='submit' name='sign-out' value='Sign-out'>
+    </form>
   </section>
 </main>
 <?php

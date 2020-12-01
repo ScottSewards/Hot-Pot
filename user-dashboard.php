@@ -2,7 +2,7 @@
 $title = "Dashboard";
 require_once("head.php");
 
-if(!isset($my_id)) direct_to("sign-in.php");
+if(!isset($my_id)) head_to("sign-in.php");
 
 if(isset($_POST["change-name"])) {
   $name = htmlspecialchars(addslashes($_POST["name"]));
@@ -11,7 +11,7 @@ if(isset($_POST["change-name"])) {
   else {
     $update = mysqli_query($connection, "UPDATE users SET name='{$name}' WHERE id='{$my_id}'");
     $_SESSION["name"] = $name;
-    direct_to("user-dashboard.php");
+    head_to_self();
   }
 } else if(isset($_POST["change-email"])) {
   $email = htmlspecialchars(addslashes($_POST["email"]));
@@ -20,14 +20,14 @@ if(isset($_POST["change-name"])) {
   else {
     $update = mysqli_query($connection, "UPDATE users SET email='{$email}' WHERE id='{$my_id}'");
     $_SESSION["email"] = $email;
-    direct_to("user-dashboard.php");
+    head_to_self();
   }
 } else if(isset($_POST["update-email-settings"])) {
-  $show_contact_form = htmlspecialchars(addslashes($_POST["show-contact-form"]));
-  $show_contact_form = $show_contact_form == "on" ? 1 : 0;
-  mysqli_query($connection, "UPDATE users SET show_contact_form='{$show_contact_form}' WHERE id='{$my_id}'");
-  $_SESSION["show_contact_form"] = $show_contact_form;
-  direct_to("user-dashboard.php");
+  $newsletter_subscription = htmlspecialchars(addslashes($_POST["newsletter-subscription"]));
+  $newsletter_subscription = $newsletter_subscription == "on" ? 1 : 0;
+  mysqli_query($connection, "UPDATE users SET newsletter_subscription='{$newsletter_subscription}' WHERE id='{$my_id}'");
+  $_SESSION["newsletter_subscription"] = $newsletter_subscription;
+  head_to_self();
 } else if(isset($_POST["change-password"])) {
   $old_password = htmlspecialchars(addslashes($_POST["old-password"]));
   $select = mysqli_query($connection, "SELECT password FROM users WHERE id='{$my_id}'");
@@ -36,7 +36,7 @@ if(isset($_POST["change-name"])) {
     $new_password = htmlspecialchars(addslashes($_POST["new-password"]));
     $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
     mysqli_query($connection, "UPDATE users SET password='{$password_hash}' WHERE id='{$my_id}'");
-    direct_to("user-dashboard.php");
+    head_to_self();
   } else echo "Your old password was incorrect.";
 } else if(isset($_POST["change-picture"])) {
   if(!empty($_FILES["picture"])) {
@@ -51,7 +51,7 @@ if(isset($_POST["change-name"])) {
       rename("images/pictures/{$file_name}", "{$path_and_file_name}");
       mysqli_query($connection, "UPDATE users SET picture='{$path_and_file_name}' WHERE id='{$my_id}'");
       $_SESSION["picture"] = $path_and_file_name;
-      direct_to("user-dashboard.php");
+      head_to_self();
     } else echo "Your file was not uploaded.";
   }
 } else if(isset($_POST["change-banner"])) {
@@ -67,7 +67,7 @@ if(isset($_POST["change-name"])) {
       rename("images/banners/{$file_name}", "{$path_and_file_name}");
       $update = mysqli_query($connection, "UPDATE users SET banner='{$path_and_file_name}' WHERE id='{$my_id}'");
       $_SESSION["banner"] = $path_and_file_name;
-      direct_to("user-dashboard.php");
+      head_to_self();
     } else echo "Your file was not uploaded.";
   }
 }
@@ -75,7 +75,21 @@ if(isset($_POST["change-name"])) {
 <main>
   <h1>Dashboard</h1>
   <section>
+    <p>Your account is not verified. If you do not have an email verification token, you can <a href=''>request an email verification token here</a>.</p>
+    <form class='less' method='POST'>
+      <div class='inline'>
+        <label for='email-verification-token'>Token</label>
+        <input id='email-verification-token' type='text' name='email-verification-token' placeholder='027121'>
+        <input type='submit' name='verify-email' value='Verify Email'>
+      </div>
+    </form>
+  </section>
+  <section>
     <h2>User Settings</h2>
+    <article>
+      <h3></h3>
+    </article>
+
     <article>
       <h3>Change Name</h3>
       <form method='POST'>
@@ -86,6 +100,7 @@ if(isset($_POST["change-name"])) {
         <input type='submit' name='change-name' value='Change Name'>
       </form>
     </article>
+
     <article>
       <h3>Change Email</h3>
       <form method='POST'>
@@ -96,20 +111,18 @@ if(isset($_POST["change-name"])) {
         <input type='submit' name='change-email' value='Change Email'>
       </form>
     </article>
+
     <article>
       <h3>Change Email Settings</h3>
       <form method='POST'>
         <div class='inline'>
-          <label for='show-contact-form'>Accept contact from other users</label>
-          <input id='show-contact-form' type='checkbox' name='show-contact-form' <?php if($my_show_contact_form == true) echo "checked"; ?>>
-        </div>
-        <div class='inline hide'>
-          <label for='send-newsletter'>Subscribe to the Hot Pot newsletter</label>
-          <input id='send-newsletter' type='checkbox' name='send-newsletter' disabled>
+          <input id='newsletter-subscription' type='checkbox' name='newsletter-subscription' <?php if($my_newsletter_subscription == "1") echo "checked"; ?>>
+          <label for='newsletter-subscription'>Subscribe to newsletter</label>
         </div>
         <input type='submit' name='update-email-settings' value='Update Email Settings'>
       </form>
     </article>
+
     <article>
       <h3>Change Password</h3>
       <form method='POST'>

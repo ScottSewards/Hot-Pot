@@ -9,13 +9,14 @@ require_once("head.php");
 <main>
   <section>
     <h1><?php echo $title; ?></h1>
-    <form id='search-bar-form' post='GET'>
+    <form id='search-bar-form' class='less' post='GET'>
       <div class='inline'>
         <label for='search-bar'>Search</label>
         <input id='search-bar' type='search' name='search' placeholder='Search communities, users, posts, and replies' <?php if(isset($_GET["search"])) echo "value='{$search}'" ?> autofocus required>
         <input id='search-bar-submit' type='submit' value='Search'>
       </div>
     </form>
+
     <article id='users'>
       <?php
       if(isset($_GET["search"])) {
@@ -40,6 +41,7 @@ require_once("head.php");
       }
       ?>
     </article>
+
     <article id='communities'>
       <?php
       if(isset($_GET["search"])) {
@@ -64,6 +66,7 @@ require_once("head.php");
       }
       ?>
     </article>
+
     <article id='posts'>
       <?php
       if(isset($_GET["search"])) {
@@ -98,27 +101,7 @@ require_once("head.php");
     </article>
   </section>
   <?php
-  if($is_localhost) {
-    echo "
-    <section>
-      <h2>Command Line</h2>
-      <div>
-        <form id='command-line-form' method='POST'>
-          <div class='inline'>
-            <label for='mysql-command-line'>Command:</label>
-            <input id='mysql-command-line' type='text' name='command-line' required/>
-          </div>
-          <input id='submit-mysqli-command-line' type='submit' value='Run Command'/>
-        </form>
-      </div>
-    </section>";
-    if(isset($_POST["mysql-command-line"])) {
-      $select = mysqli_query($connection, $_POST["command-line"]);
-      while($fetch = mysqli_fetch_assoc($select)) {
-        print_r($fetch);
-      }
-    }
-  }
+  if($is_localhost) include_once("templates/command-line.php");
   ?>
 </main>
 <?php

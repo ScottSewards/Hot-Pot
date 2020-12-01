@@ -130,7 +130,7 @@ if(isset($_POST["follow"])) {
   <section id='submit-a-post'>
     <h2>Submit a Post</h2>
     <?php
-    if(isset($my_id)) {
+    if($signed_in) {
       echo "
       <form method='POST'>
         <div>
