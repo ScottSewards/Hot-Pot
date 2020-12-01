@@ -26,6 +26,21 @@ if(mysqli_num_rows($select_user) == "1") {
 if(isset($_POST["send-email"])) {
   email($user_email, $_POST["subject"], $_POST["message"], $my_name, $my_email, true);
 }
+
+$select_follower = mysqli_query($connection, "SELECT * FROM user_follows WHERE follower='{$my_id}' AND following='{$user_id}'");
+$select_follower_exists = mysqli_num_rows($select_follower);
+if($select_follower_exists == "1") {
+  $fetch_follower = mysqli_fetch_array($select_follower);
+  $select_is_following = $fetch_follower["followed"];
+} else $select_is_following = 0;
+$follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
+if(isset($_POST["follow"])) {
+  if($select_follower_exists > "0") {
+    if($select_is_following == "1") mysqli_query($connection, "UPDATE user_follows SET followed='0', unfollowed_on='{$datetime}'");
+    else mysqli_query($connection, "UPDATE user_follows SET followed='1', followed_on='{$datetime}'");
+  } else mysqli_query($connection, "INSERT INTO user_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$user_id}')");
+  head_to("user.php?name={$user_name}");
+}
 ?>
 <main>
   <section>
@@ -56,6 +71,11 @@ if(isset($_POST["send-email"])) {
         <input type='submit' name='send-email' value='Send Email'>
       </form>";
     } else if(isset($my_id)) echo "<p>{$user_name} has chose to not show a contact form.</p>";
+
+    echo "
+    <form class='less' method='POST'>
+      <input class='centre' type='submit' name='follow' value='{$follow_value}'>
+    </form>";
     ?>
   </section>
 

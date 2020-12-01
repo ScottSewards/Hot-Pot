@@ -1,8 +1,9 @@
 <?php
-if(!empty($_SESSION["signed_in"])) head_to("user-dashboard.php");
+if(!empty($_SESSION["signed_in"]) and $_SESSION["signed_in"] == true) head_to("user-dashboard.php");
 
 $title = "Sign-in";
 require_once("head.php");
+
 
 if(isset($_POST["sign-in"])) {
   $sign_in_email = htmlspecialchars(addslashes($_POST["sign-in-email"]));
@@ -27,7 +28,7 @@ if(isset($_POST["sign-in"])) {
       <div class='inline'>
         <label for='sign-in-password'>Password*</label>
         <input id='sign-in-password' type='password' name='sign-in-password' placeholder='CitizenKane1941' autocomplete='on' required>
-        <input type='button' value='Show' name='show-password'>
+        <input type='button' value='Show' name='show-sign-in-password'>
       </div>
       <div class='inline hide'>
         <label for='stay-signed-in'>Stay signed in?</label>

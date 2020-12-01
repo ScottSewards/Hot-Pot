@@ -58,19 +58,12 @@ if($select_follower_exists == "1") {
   $fetch_follower = mysqli_fetch_array($select_follower);
   $select_is_following = $fetch_follower["followed"];
 } else $select_is_following = 0;
-
 $follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
-
 if(isset($_POST["follow"])) {
   if($select_follower_exists > "0") {
-    if($select_is_following == "1") { //UNSUBSCRIBE
-      mysqli_query($connection, "UPDATE community_follows SET followed='0', unfollowed_on='{$datetime}'");
-    } else { //SUBSCRIBE
-      mysqli_query($connection, "UPDATE community_follows SET followed='1', followed_on='{$datetime}'");
-    }
-  } else { //CREATE SUBSCRIPTION
-    mysqli_query($connection, "INSERT INTO community_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$community_id}')");
-  }
+    if($select_is_following == "1") mysqli_query($connection, "UPDATE community_follows SET followed='0', unfollowed_on='{$datetime}'");
+    else mysqli_query($connection, "UPDATE community_follows SET followed='1', followed_on='{$datetime}'");
+  } else mysqli_query($connection, "INSERT INTO community_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$community_id}')");
   head_to("community.php?name={$community_name}");
 }
 ?>
@@ -86,7 +79,7 @@ if(isset($_POST["follow"])) {
 
     $community_created_to_new_date = date("jS F Y", strtotime($community_created));
     echo "<p class='centre'>Community since {$community_created_to_new_date}</p>";
-    //
+
     echo "
     <form class='less' method='POST'>
       <input class='centre' type='submit' name='follow' value='{$follow_value}'>
