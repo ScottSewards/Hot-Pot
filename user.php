@@ -1,122 +1,142 @@
 <?php
-$title = "User";
+//$title = "{$user_name}";
 require_once("head.php");
 
-if(!isset($_GET["name"])) {
-  mysqli_close($connection);
-  redirect("404.html");
-}
+if(!isset($_GET["name"])) head_to("404.html");
+else $user_name = $_GET["name"];
 
-$name = $_GET["name"];
-$select = mysqli_query($connection, "SELECT * FROM users WHERE name='{$name}'");
-if(mysqli_num_rows($select) == "1") {
-  $fetch = mysqli_fetch_array($select);
-  $id = $fetch["id"];
-  $created = $fetch["created"];
-  $email = $fetch["email"];
-  $can_email = $fetch["can_email"];
-  $picture = $fetch["picture"];
-  $banner = $fetch["banner"];
+$select_user = mysqli_query($connection, "SELECT * FROM users WHERE name='{$user_name}'");
+if(mysqli_num_rows($select_user) == "1") {
+  $fetch_user = mysqli_fetch_assoc($select_user);
+  $user_id = $fetch_user["id"];
+  $user_created = $fetch_user["created"];
+  $user_description = $fetch_user["description"];
+  $user_email = $fetch_user["email"];
+  $user_picture = $fetch_user["picture"];
+  $user_banner = $fetch_user["banner"];
 } else {
   mysqli_close($connection);
-  redirect("404.html");
+  head_to("404.html");
 }
 
-if(isset($_POST["send-email"])) {
-  if($is_localhost == false) send_email($email, $_POST["subject"], $_POST["message"], $my_name, $_POST["email-address"], true);
-  else echo "You cannot send an email on localhost.";
+if($signed_in) {
+  $select_follower = mysqli_query($connection, "SELECT * FROM user_follows WHERE follower='{$my_id}' AND following='{$user_id}'");
+  $select_follower_exists = mysqli_num_rows($select_follower);
+  if($select_follower_exists == "1") {
+    $fetch_follower = mysqli_fetch_array($select_follower);
+    $select_is_following = $fetch_follower["followed"];
+  } else $select_is_following = 0;
+  $follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
+  if(isset($_POST["follow"])) {
+    if($select_follower_exists > "0") {
+      if($select_is_following == "1") mysqli_query($connection, "UPDATE user_follows SET followed='0', unfollowed_on='{$datetime}'");
+      else mysqli_query($connection, "UPDATE user_follows SET followed='1', followed_on='{$datetime}'");
+    } else mysqli_query($connection, "INSERT INTO user_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$user_id}')");
+    head_to("user.php?name={$user_name}");
+  }
+
+  if(isset($_POST["friend"])) {
+    //COPY FOLLOW CODE
+  }
 }
 ?>
 <main>
   <section>
-    <img class='banner' <?php echo "src='{$banner}' alt='Banner for {$name}'"; ?> height='100%' width='100%'/>
-    <img class='picture' <?php echo "src='{$picture}' alt='Picture for {$name}'"; ?> height='100%' width='100%'/>
-    <h1><?php echo $name; ?></h1>
-    <p><?php echo "User since {$created}."; ?></p>
-    <hr>
     <?php
-    if(isset($my_id) and $can_email == true) {
-      echo "
-      <h2>Contact</h2>
-      <form action='contact.php' method='POST'>
-        <div class='inline'>
-          <label for='sender'>Name</label>
-          <input id='sender' type='text' name='sender' value='{$my_name}' disabled/>
-        </div>
-        <div class='inline'>
-          <label for='email-address'>Return Email*</label>
-          <input id='email-address' type='email' name='email-address' value='{$my_email}' required disabled/>
-        </div>
-        <div class='inline'>
-          <label for=email-subject>Subject*</label>
-          <input id='email-subject' type='text' name='subject' placeholder='' required/>
-        </div>
-        <div class='inline'>
-          <label for='email-message'>Message*</label>
-          <textarea id='email-message' name='message' min='10' required></textarea>
-        </div>
-        <input type='submit' name='send-email' value='Send Email'/>
+    echo "<img class='banner' src='{$user_banner}' alt='Banner for {$user_name}' height='100%' width='100%'>";
+    echo "<img class='picture' src='{$user_picture}' alt='Picture for {$user_name}' height='100%' width='100%'>";
+    echo "<h1>{$user_name}</h1>";
+
+    if($user_description != null) echo "<p class='centre'>{$user_description}</p>";
+    else echo "<p class='centre'>{$user_name} has not written a description.</p>";
+
+    $user_created_to_new_date = date("jS F Y", strtotime($user_created));
+    echo "<p class='centre'>User since {$user_created_to_new_date}</p>";
+
+    if($signed_in) echo "
+    <form class='less' method='POST'>
+      <input class='centre' type='submit' name='follow' value='{$follow_value}'>
+    </form>";
+
+    if($signed_in and $my_id != $user_id) echo "
+      <form class='less' method='POST'>
+        <input class='centre' type='submit' name='friend' value='Friend'>
       </form>";
-    } else if(isset($my_id)) echo "<p>This user has disabled contact.</p>";
-    else echo "<p>Sign-in to contact this user.</p>";
     ?>
   </section>
 
-  <section id='communities'>
+  <section>
+    <h2>Friends</h2>
+    <?php
+    echo "<p>{$user_name} has not made any friends yet.</p>";
+    echo "<div class='users hide'>";
+    echo "</div>";
+    ?>
+  </section>
+
+  <section id='user-communities'>
     <h2>Communities</h2>
-    <article id='communities-created'>
-      <h3>Created</h3>
+    <article id='user-communities-created'>
+      <h3>Communities Created</h3>
       <?php
-      $select_created_communities = mysqli_query($connection, "SELECT * FROM communities WHERE created_by='{$id}' ORDER BY id DESC");
+      $select_created_communities = mysqli_query($connection, "SELECT * FROM communities WHERE created_by='{$user_id}'");
       if(mysqli_num_rows($select_created_communities) > "0") {
         echo "<div class='communities'>";
         while($fetch_created_communities = mysqli_fetch_array($select_created_communities)) {
           $created_community_created = $fetch_created_communities["created"];
+          $created_community_created_to_new_date = date("M Y", strtotime($created_community_created));
           $created_community_name = $fetch_created_communities["name"];
           $created_community_picture = $fetch_created_communities["picture"];
           echo "
           <div class='community'>
-            <img src='{$created_community_picture}' alt='Picture for {$created_community_name}' height='100%' width='100%'/>
+            <img src='{$created_community_picture}' alt='Picture for {$created_community_name}' height='0' width='100%'>
             <div class='meta'>
               <span><a href='community.php?name={$created_community_name}'>{$created_community_name}</a></span>
-              <span>created {$created_community_created}</span>
+              <span>created {$created_community_created_to_new_date}</span>
             </div>
           </div>";
         }
         echo "</div>";
-      } else echo "<p>{$name} has not created any communities yet.</p>";
+      } else echo "<p>{$user_name} has not created any communities.</p>";
       ?>
     </article>
-    <h3>Administrating</h3>
-    <?php
-    $select_administrating_communities = mysqli_query($connection, "SELECT * FROM communities WHERE admin='{$id}' ORDER BY id DESC");
-    if(mysqli_num_rows($select_administrating_communities) > "0") {
-      echo "<div class='communities'>";
-      while($fetch_administrating_communities = mysqli_fetch_array($select_administrating_communities)) {
-        $administrating_community_created = $fetch_administrating_communities["created"];
-        $administrating_community_name = $fetch_administrating_communities["name"];
-        $administrating_community_picture = $fetch_administrating_communities["picture"];
-        echo "
-        <div class='community'>
-          <img src='{$administrating_community_picture}' alt='Picture for {$administrating_community_picture}' height='100%' width='100%'/>
-          <div class='meta'>
-            <span><a href='community.php?name={$administrating_community_name}'>{$administrating_community_name}</a></span>
-            <span>created {$administrating_community_created}</span>
-          </div>
-        </div>";
-      }
-      echo "</div>";
-    } else echo "<p>{$name} is not admin for any communities yet.</p>";
-    ?>
+
+    <article id='user-communities-administrated'>
+      <h3>Communities Moderated</h3>
+      <?php
+      /*
+      $select_moderated_communities = mysqli_query($connection, "SELECT * FROM communities WHERE moderated_by='{$user_id}'");
+      if(mysqli_num_rows($select_moderated_communities) > "0") {
+        echo "<div class='communities'>";
+        while($fetch_moderated_communities = mysqli_fetch_array($select_moderated_communities)) {
+          $moderated_community_created = $fetch_moderated_communities["created"];
+          $moderated_community_created_to_new_date = date("M Y", strtotime($moderated_community_created));
+          $moderated_community_name = $fetch_moderated_communities["name"];
+          $moderated_community_picture = $fetch_moderated_communities["picture"];
+          echo "
+          <div class='community'>
+            <img src='{$moderated_community_picture}' alt='Picture for {$moderated_community_picture}' height='' width='100%'>
+            <div class='meta'>
+              <span><a href='community.php?name={$moderated_community_name}'>{$moderated_community_name}</a></span>
+              <span>created {$moderated_community_created_to_new_date}</span>
+            </div>
+          </div>";
+        }
+        echo "</div>";
+      } else echo "<p>{$user_name} does not moderate any communities.</p>";
+      */
+      ?>
+    </article>
   </section>
 
-  <section id='posts'>
+  <section id='user-posts'>
     <h2>Posts</h2>
     <?php
-    $select_posts = mysqli_query($connection, "SELECT * FROM posts WHERE posted_by='{$id}' ORDER BY id DESC");
+    $select_posts = mysqli_query($connection, "SELECT * FROM posts WHERE posted_by='{$user_id}' ORDER BY id DESC");
     if(mysqli_num_rows($select_posts) > "0") {
       echo "<div class='posts'>";
       while($fetch_post = mysqli_fetch_array($select_posts)) {
+        $post_id = $fetch_post["id"];
         $posted = $fetch_post["posted"];
         $posted_in = $fetch_post["posted_in"];
         $select_posted_in = mysqli_query($connection, "SELECT name FROM communities WHERE id='{$posted_in}'");
@@ -124,23 +144,20 @@ if(isset($_POST["send-email"])) {
         $posted_in = $fetch_posted_by["name"];
         $title = $fetch_post["title"];
         $content = $fetch_post["content"];
-        $likes = $fetch_post["likes"];
-        $dislikes = $fetch_post["dislikes"];
         echo "
         <div class='post'>
-          <p><a href='post.php?title={$title}'>{$title}</a> posted in <a href='community.php?name={$posted_in}'>{$posted_in}</a> on {$posted}.</p>
-          <p>{$likes} likes and {$dislikes} dislikes.</p>
+          <span><a href='post.php?id={$post_id}&title={$title}'>{$title}</a> posted in <a href='community.php?name={$posted_in}'>{$posted_in}</a> on {$posted}.</span>
         </div>";
       }
       echo "</div>";
-    } else echo "<p>{$name} has not posted to any communities yet.</p>";
+    } else echo "<p>{$user_name} has not posted to any communities.</p>";
     ?>
   </section>
 
-  <section id='replies'>
+  <section id='user-replies'>
     <h2>Replies</h2>
     <?php
-    $select_replies = mysqli_query($connection, "SELECT * FROM replies WHERE reply_by='{$id}' ORDER BY id DESC");
+    $select_replies = mysqli_query($connection, "SELECT * FROM replies WHERE reply_by='{$user_id}' ORDER BY id DESC");
     if(mysqli_num_rows($select_replies) > "0") {
       echo "<div class='replies'>";
       while($fetch_replies = mysqli_fetch_array($select_replies)) {
@@ -156,15 +173,13 @@ if(isset($_POST["send-email"])) {
         $content = $fetch_replies["content"];
         echo "
         <div class='reply'>
-          <p>Replied in <a href='post.php?title={$replied_in_name}'>{$replied_in_name}</a> on <a href='community.php?name={$posted_in_name}'>{$posted_in_name}</a> on {$replied}.</p>
-          <p>{$content}</p>
+          <span>Replied in <a href='post.php?title={$replied_in_name}'>{$replied_in_name}</a> on <a href='community.php?name={$posted_in_name}'>{$posted_in_name}</a> on {$replied}.</span>
+          <span>{$content}</span>
         </div>";
       }
       echo "</div>";
-    } else echo "<p>{$name} has not replied to any posts yet.</p>";
+    } else echo "<p>{$user_name} has not replied to any posts.</p>";
     ?>
   </section>
 </main>
-<?php
-require_once("foot.php");
-?>
+<?php require_once("foot.php"); ?>

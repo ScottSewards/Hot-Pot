@@ -3,3 +3,6 @@ images/banners/*
 !images/banners/.gitkeep
 images/pictures/*
 !images/pictures/.gitkeep
+images/posts/*
+!images/posts/.gitkeep
+sql

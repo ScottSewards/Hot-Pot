@@ -19,15 +19,15 @@ require_once("head.php");
       <fieldset>
         <legend>Colour Scheme</legend>
         <div class='inline'>
-          <input id='colour-scheme-light' type='radio' name='colour-scheme' value='0' checked required/>
+          <input id='colour-scheme-light' type='radio' name='colour-scheme' value='0' checked/>
           <label for='colour-scheme-light'>Light (default)</label>
         </div>
         <div class='inline'>
-          <input id='colour-scheme-dark' type='radio' name='colour-scheme' value='0' required/>
+          <input id='colour-scheme-dark' type='radio' name='colour-scheme' value='0'/>
           <label for='colour-scheme-dark'>Dark</label>
         </div>
         <div class='inline'>
-          <input id='colour-scheme-system' type='radio' name='colour-scheme' value='0' required/>
+          <input id='colour-scheme-system' type='radio' name='colour-scheme' value='0'/>
           <label for='colour-scheme-system'>System</label>
         </div>
       </fieldset>

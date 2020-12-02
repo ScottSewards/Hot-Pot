@@ -1,0 +1,21 @@
+{
+  "name": "HotPot",
+  "short_name": "HotPot",
+  "description": "Community-based forum",
+  "scope": "/",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "orientation": "portrait",
+  "theme_color": "#222222",
+  "background_color": "#222222",
+  "icons": [{ "src": "images/favicon.png", "type": "image/png", "sizes": "256x256" }],
+  "shortcuts": [
+    {
+      "name": "HotPot",
+      "short_name": "HotPot",
+      "description": "Community-based forum",
+      "url": "/",
+      "icons": [ { "src": "images/favicon.png", "type": "image/png", "sizes": "256x256" }]
+    }
+  ]
+}
