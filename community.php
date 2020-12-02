@@ -1,11 +1,9 @@
 <?php
-if(!isset($_GET["name"])) {
-  mysqli_close($connection);
-  head_to("404.html");
-} else $community_name = $_GET["name"];
-
-$title = "{$community_name} Community";
+//$title = "{$community_name} Community";
 require_once("head.php");
+
+if(!isset($_GET["name"])) head_to("404.html");
+else $community_name = $_GET["name"];
 
 $select_community = mysqli_query($connection, "SELECT * FROM communities WHERE name='{$community_name}'");
 if(mysqli_num_rows($select_community) == "1") {
@@ -28,17 +26,7 @@ if(mysqli_num_rows($select_community) == "1") {
   $community_banner = $fetch_community["banner"];
   //SUBSCRIBERS
 } else {
-  mysqli_close($connection);
   head_to("404.html");
-}
-
-if(isset($_POST["post"])) {
-  $new_post_posted_by = $my_id;
-  $new_post_posted_in = $community_id;
-  $new_post_title = htmlspecialchars(addslashes($_POST["title"]));
-  $new_post_content = htmlspecialchars(addslashes($_POST["content"]));
-  mysqli_query($connection, "INSERT INTO posts (posted, posted_by, posted_in, title, content) VALUES ('{$datetime}', '{$new_post_posted_by}', '{$new_post_posted_in}', '{$new_post_title}', '{$new_post_content}')");
-  direct_to("community.php?name={$community_name}");
 }
 
 if(isset($_POST["pin-post"])) {
@@ -52,19 +40,21 @@ if(isset($_POST["pin-post"])) {
   }
 }
 
-$select_follower = mysqli_query($connection, "SELECT * FROM community_follows WHERE follower='{$my_id}' AND following='{$community_id}'");
-$select_follower_exists = mysqli_num_rows($select_follower);
-if($select_follower_exists == "1") {
-  $fetch_follower = mysqli_fetch_array($select_follower);
-  $select_is_following = $fetch_follower["followed"];
-} else $select_is_following = 0;
-$follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
-if(isset($_POST["follow"])) {
-  if($select_follower_exists > "0") {
-    if($select_is_following == "1") mysqli_query($connection, "UPDATE community_follows SET followed='0', unfollowed_on='{$datetime}'");
-    else mysqli_query($connection, "UPDATE community_follows SET followed='1', followed_on='{$datetime}'");
-  } else mysqli_query($connection, "INSERT INTO community_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$community_id}')");
-  head_to("community.php?name={$community_name}");
+if($signed_in) {
+  $select_follower = mysqli_query($connection, "SELECT * FROM community_follows WHERE follower='{$my_id}' AND following='{$community_id}'");
+  $select_follower_exists = mysqli_num_rows($select_follower);
+  if($select_follower_exists == "1") {
+    $fetch_follower = mysqli_fetch_array($select_follower);
+    $select_is_following = $fetch_follower["followed"];
+  } else $select_is_following = 0;
+  $follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
+  if(isset($_POST["follow"])) {
+    if($select_follower_exists > "0") {
+      if($select_is_following == "1") mysqli_query($connection, "UPDATE community_follows SET followed='0', unfollowed_on='{$datetime}'");
+      else mysqli_query($connection, "UPDATE community_follows SET followed='1', followed_on='{$datetime}'");
+    } else mysqli_query($connection, "INSERT INTO community_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$community_id}')");
+    head_to("community.php?name={$community_name}");
+  }
 }
 ?>
 <main>
@@ -80,7 +70,7 @@ if(isset($_POST["follow"])) {
     $community_created_to_new_date = date("jS F Y", strtotime($community_created));
     echo "<p class='centre'>Community since {$community_created_to_new_date}</p>";
 
-    echo "
+    if($signed_in) echo "
     <form class='less' method='POST'>
       <input class='centre' type='submit' name='follow' value='{$follow_value}'>
     </form>";
@@ -127,26 +117,7 @@ if(isset($_POST["follow"])) {
     } else echo "<p>There are no posts here.</p>";
     ?>
   </section>
-  <section id='submit-a-post'>
-    <h2>Submit a Post</h2>
-    <?php
-    if($signed_in) {
-      echo "
-      <form method='POST'>
-        <div>
-          <label for='title'>Title</label>
-          <input id='title' type='text' name='title' required>
-        </div>
-        <div>
-          <label for='content'>Content</label>
-          <textarea id='content' name='content' required></textarea>
-        </div>
-        <input type='submit' name='post' value='Post'>
-      </form>";
-    } else echo "<p>Sign-in to submit a post.</p>";
-    ?>
-  </section>
+
+  <?php if($signed_in) include_once("templates/post-thread.php"); ?>
 </main>
-<?php
-require_once("foot.php");
-?>
+<?php require_once("foot.php"); ?>

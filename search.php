@@ -100,10 +100,6 @@ require_once("head.php");
       ?>
     </article>
   </section>
-  <?php
-  if($is_localhost) include_once("templates/command-line.php");
-  ?>
+  <?php if($is_localhost) include_once("templates/command-line.php"); ?>
 </main>
-<?php
-require_once("foot.php");
-?>
+<?php require_once("foot.php"); ?>

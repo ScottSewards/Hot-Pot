@@ -2,7 +2,7 @@
 $title = "Dashboard";
 require_once("head.php");
 
-if(!isset($my_id)) head_to("sign-in.php");
+if(!$signed_in) head_to("sign-in.php");
 
 if(isset($_POST["change-name"])) {
   $name = htmlspecialchars(addslashes($_POST["name"]));
@@ -74,16 +74,7 @@ if(isset($_POST["change-name"])) {
 ?>
 <main>
   <h1>Dashboard</h1>
-  <section>
-    <p>Your account is not verified. If you do not have an email verification token, you can <a href=''>request an email verification token here</a>.</p>
-    <form class='less' method='POST'>
-      <div class='inline'>
-        <label for='email-verification-token'>Token</label>
-        <input id='email-verification-token' type='text' name='email-verification-token' placeholder='027121'>
-        <input type='submit' name='verify-email' value='Verify Email'>
-      </div>
-    </form>
-  </section>
+  <?php if(!$my_verified) include_once("templates/user-dashboard-verify.php"); ?>
   <section>
     <h2>User Settings</h2>
     <article>

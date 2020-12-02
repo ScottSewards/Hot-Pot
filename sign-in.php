@@ -1,8 +1,7 @@
 <?php
-if(!empty($_SESSION["signed_in"]) and $_SESSION["signed_in"] == true) head_to("user-dashboard.php");
-
 $title = "Sign-in";
 require_once("head.php");
+if($signed_in) head_to("user-dashboard.php");
 
 if(isset($_POST["sign-in"])) {
   $sign_in_email = htmlspecialchars(addslashes($_POST["sign-in-email"]));
@@ -11,13 +10,21 @@ if(isset($_POST["sign-in"])) {
   if(mysqli_num_rows($select_sign_in_by_email) == "1") {
     $fetch_sign_in_by_email = mysqli_fetch_array($select_sign_in_by_email);
     if(password_verify($sign_in_password, $fetch_sign_in_by_email["password"])) {
-      sign_in($fetch_sign_in_by_email);
+      $_SESSION["signed_in"] = true;
+      $_SESSION["id"] = $fetch_sign_in_by_email["id"];
+      $_SESSION["created"] = $fetch_sign_in_by_email["created"];
+      $_SESSION["name"] = $fetch_sign_in_by_email["name"];
+      $_SESSION["description"] = $fetch_sign_in_by_email["description"];
+      $_SESSION["email"] = $fetch_sign_in_by_email["email"];
+      $_SESSION["verified"] = $fetch_sign_in_by_email["verified"];
+      $_SESSION["newsletter_subscription"] = $fetch_sign_in_by_email["newsletter_subscription"];
+      $_SESSION["picture"] = $fetch_sign_in_by_email["picture"];
+      $_SESSION["banner"] = $fetch_sign_in_by_email["banner"];
+      $user_id = $_SESSION["id"];
+      mysqli_query($connection, "INSERT INTO user_sign_ins (signed_in, user_id, ip_address) VALUES ('{$datetime}', '{$user_id}', '{$ip_address}')");
+      head_to("user-dashboard.php");
     } else $error = "Your email or passward was incorrect.";
   } else $error = "Your email or passward was incorrect.";
-}
-
-if(isset($_POST["sign-out"])) {
-  sign_out();
 }
 ?>
 <main>
@@ -44,11 +51,6 @@ if(isset($_POST["sign-out"])) {
       <?php if(isset($error)) echo "<output name='sign-in-output'>{$error}</output>"?>
     </form>
     <p>If you don't have an account, you can <a href='sign-up.php'>sign-up here</a>.</p>
-  </section>
-  <section>
-    <form class='less' method='POST'>
-      <input type='submit' name='sign-out' value='Sign-out'>
-    </form>
   </section>
 </main>
 <?php

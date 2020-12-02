@@ -3,6 +3,12 @@ require_once("head.php");
 ?>
 <main>
   <h1>Index</h1>
+  <section>
+    <form class='less' method='POST'>
+      <input type='submit' name='sign-out' value='Sign-out'>
+    </form>
+  </section>
+
   <section id='posts'>
     <h2>Posts</h2>
     <form class='less' method='POST'>

@@ -1,8 +1,7 @@
 <?php
-if(isset($my_id)) direct_to("user-dashboard.php");
-
 $title = "Sign-up";
 require_once("head.php");
+if($signed_in) direct_to("user-dashboard.php");
 
 if(isset($_POST["sign-up"])) {
   $created = date("Y-m-d G:i:s");
@@ -15,10 +14,23 @@ if(isset($_POST["sign-up"])) {
   else if(mysqli_num_rows($select_email) == "1") $error = "You cannot use the email {$email}.";
   else {
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    mysqli_query($connection, "INSERT INTO users (created, name, email, password) VALUES ('{$created}', '{$name}', '{$email}', '{$password_hash}')");
-    $select_user = mysqli_query($connection, "SELECT * FROM users WHERE name='{$name}'");
-    $fetch_user = mysqli_fetch_assoc($select_user);
-    sign_in($fetch_user);
+    $token = rand(100000, 999999);
+    mysqli_query($connection, "INSERT INTO users (created, name, email, token, password) VALUES ('{$created}', '{$name}', '{$email}', '{$token}', '{$password_hash}')");
+    $select_user_by_name = mysqli_query($connection, "SELECT * FROM users WHERE name='{$name}'");
+    $fetch_user_by_name = mysqli_fetch_assoc($select_user_by_name);
+    $_SESSION["signed_in"] = true;
+    $_SESSION["id"] = $fetch_user_by_name["id"];
+    $_SESSION["created"] = $fetch_user_by_name["created"];
+    $_SESSION["name"] = $fetch_user_by_name["name"];
+    $_SESSION["description"] = $fetch_user_by_name["description"];
+    $_SESSION["email"] = $fetch_user_by_name["email"];
+    $_SESSION["verified"] = $fetch_user_by_name["verified"];
+    $_SESSION["newsletter_subscription"] = $fetch_user_by_name["newsletter_subscription"];
+    $_SESSION["picture"] = $fetch_user_by_name["picture"];
+    $_SESSION["banner"] = $fetch_user_by_name["banner"];
+    $user_id = $_SESSION["id"];
+    mysqli_query($connection, "INSERT INTO user_sign_ins (signed_in, user_id, ip_address) VALUES ('{$datetime}', '{$user_id}', '{$ip_address}')");
+    head_to("user-dashboard.php");
   }
 }
 ?>

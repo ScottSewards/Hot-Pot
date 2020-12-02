@@ -1,8 +1,5 @@
 <?php
-if(!isset($_GET["id"])) {
-  mysqli_close($connection);
-  direct_to("404.html");
-}
+if(!isset($_GET["id"])) head_to("404.html");
 
 $id = $_GET["id"];
 $title = $_GET["title"];
@@ -22,10 +19,7 @@ if(mysqli_num_rows($select_post) == "1") {
   $fetch_posted_in = mysqli_fetch_array($select_posted_in);
   $posted_in_name = $fetch_posted_in["name"];
   $content = $fetch_post["content"];
-} else {
-  mysqli_close($connection);
-  direct_to("404.html");
-}
+} else head_to("404.html");
 
 if(isset($_POST["submit-reply"])) {
   $new_replied = date("Y-m-d G:i:s");
@@ -33,7 +27,7 @@ if(isset($_POST["submit-reply"])) {
   $new_replied_in = $post_id;
   $new_content = $_POST["reply"];
   mysqli_query($connection, "INSERT INTO replies (replied, reply_by, replied_in, content) VALUES ('{$new_replied}', '{$new_reply_by}', '{$new_replied_in}', '{$new_content}')");
-  direct_to("post.php?title={$title}");
+  head_to("post.php?title={$title}");
 }
 ?>
 <main>

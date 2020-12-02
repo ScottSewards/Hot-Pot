@@ -1,11 +1,9 @@
 <?php
-if(!isset($_GET["name"])) {
-  mysqli_close($connection);
-  head_to("404.html");
-} else $user_name = $_GET["name"];
-
-$title = "{$user_name}";
+//$title = "{$user_name}";
 require_once("head.php");
+
+if(!isset($_GET["name"])) head_to("404.html");
+else $user_name = $_GET["name"];
 
 $select_user = mysqli_query($connection, "SELECT * FROM users WHERE name='{$user_name}'");
 if(mysqli_num_rows($select_user) == "1") {
@@ -21,23 +19,25 @@ if(mysqli_num_rows($select_user) == "1") {
   head_to("404.html");
 }
 
-if(isset($_POST["send-email"])) {
-  email($user_email, $_POST["subject"], $_POST["message"], $my_name, $my_email, true);
-}
+if($signed_in) {
+  $select_follower = mysqli_query($connection, "SELECT * FROM user_follows WHERE follower='{$my_id}' AND following='{$user_id}'");
+  $select_follower_exists = mysqli_num_rows($select_follower);
+  if($select_follower_exists == "1") {
+    $fetch_follower = mysqli_fetch_array($select_follower);
+    $select_is_following = $fetch_follower["followed"];
+  } else $select_is_following = 0;
+  $follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
+  if(isset($_POST["follow"])) {
+    if($select_follower_exists > "0") {
+      if($select_is_following == "1") mysqli_query($connection, "UPDATE user_follows SET followed='0', unfollowed_on='{$datetime}'");
+      else mysqli_query($connection, "UPDATE user_follows SET followed='1', followed_on='{$datetime}'");
+    } else mysqli_query($connection, "INSERT INTO user_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$user_id}')");
+    head_to("user.php?name={$user_name}");
+  }
 
-$select_follower = mysqli_query($connection, "SELECT * FROM user_follows WHERE follower='{$my_id}' AND following='{$user_id}'");
-$select_follower_exists = mysqli_num_rows($select_follower);
-if($select_follower_exists == "1") {
-  $fetch_follower = mysqli_fetch_array($select_follower);
-  $select_is_following = $fetch_follower["followed"];
-} else $select_is_following = 0;
-$follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
-if(isset($_POST["follow"])) {
-  if($select_follower_exists > "0") {
-    if($select_is_following == "1") mysqli_query($connection, "UPDATE user_follows SET followed='0', unfollowed_on='{$datetime}'");
-    else mysqli_query($connection, "UPDATE user_follows SET followed='1', followed_on='{$datetime}'");
-  } else mysqli_query($connection, "INSERT INTO user_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$user_id}')");
-  head_to("user.php?name={$user_name}");
+  if(isset($_POST["friend"])) {
+    //COPY FOLLOW CODE
+  }
 }
 ?>
 <main>
@@ -53,16 +53,15 @@ if(isset($_POST["follow"])) {
     $user_created_to_new_date = date("jS F Y", strtotime($user_created));
     echo "<p class='centre'>User since {$user_created_to_new_date}</p>";
 
-    echo "
+    if($signed_in) echo "
     <form class='less' method='POST'>
       <input class='centre' type='submit' name='follow' value='{$follow_value}'>
     </form>";
 
-    $friend_value = "Friend"; //"UNFRIEND"
-    echo "
-    <form class='less' method='POST'>
-      <input class='centre' type='submit' name='friend' value='{$friend_value}'>
-    </form>";
+    if($signed_in and $my_id != $user_id) echo "
+      <form class='less' method='POST'>
+        <input class='centre' type='submit' name='friend' value='Friend'>
+      </form>";
     ?>
   </section>
 
@@ -101,9 +100,11 @@ if(isset($_POST["follow"])) {
       } else echo "<p>{$user_name} has not created any communities.</p>";
       ?>
     </article>
+
     <article id='user-communities-administrated'>
       <h3>Communities Moderated</h3>
       <?php
+      /*
       $select_moderated_communities = mysqli_query($connection, "SELECT * FROM communities WHERE moderated_by='{$user_id}'");
       if(mysqli_num_rows($select_moderated_communities) > "0") {
         echo "<div class='communities'>";
@@ -123,9 +124,11 @@ if(isset($_POST["follow"])) {
         }
         echo "</div>";
       } else echo "<p>{$user_name} does not moderate any communities.</p>";
+      */
       ?>
     </article>
   </section>
+
   <section id='user-posts'>
     <h2>Posts</h2>
     <?php
@@ -150,6 +153,7 @@ if(isset($_POST["follow"])) {
     } else echo "<p>{$user_name} has not posted to any communities.</p>";
     ?>
   </section>
+
   <section id='user-replies'>
     <h2>Replies</h2>
     <?php
@@ -178,6 +182,4 @@ if(isset($_POST["follow"])) {
     ?>
   </section>
 </main>
-<?php
-require_once("foot.php");
-?>
+<?php require_once("foot.php"); ?>

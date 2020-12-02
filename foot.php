@@ -3,6 +3,4 @@
     </footer>
   </body>
 </html>
-<?php
-mysqli_close($connection);
-?>
+<?php mysqli_close($connection); ?>
