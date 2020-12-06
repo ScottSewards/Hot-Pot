@@ -1,26 +1,23 @@
 <?php
-if(isset($_POST["create-community"])) {
-  $new_community_created = date("Y-m-d G:i:s");
-  $new_community_created_by = $my_id;
-  $new_community_moderated_by = $new_community_created_by;
+if(isset($_POST["submit-create-community"])) {
   $new_community_name = htmlspecialchars(addslashes($_POST["community-name"]));
-  $new_community_description = htmlspecialchars(addslashes($_POST["community-description"]));
-  mysqli_query($connection, "INSERT INTO communities (created, created_by, moderated_by, name, description) VALUES ('{$new_community_created}', '{$new_community_created_by}', '{$new_community_moderated_by}', '{$new_community_name}', '{$new_community_description}')");
-  head_to("community.php?name={$new_community_name}");
+  $select_community = mysqli_query($connection, "SELECT name FROM communities WHERE name='{$new_community_name}'");
+  if(mysqli_num_rows($select_community) > "0") $error = "You cannot use this name for a community.";
+  else {
+    mysqli_query($connection, "INSERT INTO communities (created_date, created_by_id, name) VALUES ('{$datetime}', '{$my_id}', '{$new_community_name}')");
+    $new_community_id = mysqli_insert_id($connection);
+    mysqli_query($connection, "INSERT INTO community_moderators (user_id, community_id, assigned_date) VALUES ('{$my_id}', '{$new_community_id}', '{$datetime}')");
+    head_to("community.php?name={$new_community_name}");
+  }
 }
 ?>
 <section>
   <h2>Create Community</h2>
-  <form method='POST'>
-    <div>
-      <label for='community-name'>Community Name</label>
+  <form class='less' method='POST'>
+    <div class='inline'>
+      <label for='community-name'>Name</label>
       <input id='community-name' type='text' name='community-name' required>
+      <input type='submit' name='submit-create-community' value='Create'>
     </div>
-    <div>
-      <label for='community-description'>Content</label>
-      <textarea id='community-description' name='community-description' required>
-      </textarea>
-    </div>
-    <input type='submit' name='create-community' value='Create Community'>
   </form>
 </section>

@@ -73,25 +73,23 @@ function email_verification() {
   //email();
 }
 
+session_start();
 if(isset($_POST["sign-out"])) {
-  session_destroy();
-  session_start();
   $_SESSION["signed_in"] = false;
-  $user_id = $_SESSION["id"];
-  mysqli_query($connection, "INSERT INTO user_sign_outs (signed_out, user_id, ip_address) VALUES ('{$datetime}', '{$user_id}', '{$ip_address}')");
+  $my_id = $_SESSION["user"]["id"];
+  mysqli_query($connection, "INSERT INTO user_sign_outs (user_id, sign_out_date, ip_address) VALUES ('{$my_id}', '{$datetime}', '{$ip_address}')");
   head_to_self();
-} else session_start();
+} else
 
 if(isset($_SESSION["signed_in"]) and $_SESSION["signed_in"] == "1") {
   $signed_in = true;
-  $my_id = $_SESSION["id"];
-  $my_name = $_SESSION["name"];
-  $my_description = $_SESSION["description"];
-  $my_email = $_SESSION["email"];
-  $my_newsletter_subscription = $_SESSION["newsletter_subscription"];
-  $my_verified = $_SESSION["verified"];
-  $my_picture = $_SESSION["picture"];
-  $my_banner = $_SESSION["banner"];
+  $my_id = $_SESSION["user"]["id"];
+  $my_name = $_SESSION["user"]["name"];
+  $my_email = $_SESSION["user"]["email"];
+  //$my_newsletter_sub = $_SESSION["user"]["newsletter_subs"];
+  $my_verified = $_SESSION["user"]["verified"];
+  $my_picture = $_SESSION["user"]["picture"];
+  $my_banner = $_SESSION["user"]["banner"];
 } else $signed_in = false;
 
 //date_default_timezone_get(); //DEFAULT TIMEZONE IS 'Europe/Berlin'

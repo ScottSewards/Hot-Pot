@@ -5,7 +5,7 @@ require_once("head.php");
   <h1>Index</h1>
   <section>
     <form class='less' method='POST'>
-      <input type='submit' name='sign-out' value='Sign-out'>
+      <input type='submit' name='sign-out' value='Sign-out' <?php if(!$signed_in) echo "disabled"; ?>>
     </form>
   </section>
 
@@ -80,9 +80,6 @@ require_once("head.php");
       ?>
     </div>
   </section>
-  <?php
-  if($signed_in) include_once("templates/create-community.php");
-  ?>
 </main>
 <?php
 require_once("foot.php");

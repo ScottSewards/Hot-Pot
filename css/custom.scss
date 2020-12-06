@@ -43,7 +43,7 @@ body {
   }
 }
 
-.community, .post, .reply, .user {
+.community, .post, .comment, .user {
   span {
     display: block;
   }
@@ -68,11 +68,11 @@ input.centre {
   margin-top: var(--half-space);
 }
 
-.replies {
+.comments {
   background: #EEEEEE11;
   padding: var(--space);
 }
-.replies + .replies {
+.comments + .comments {
   margin-top: var(--half-space);
 }
 

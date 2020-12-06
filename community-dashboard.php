@@ -24,7 +24,7 @@ if(mysqli_num_rows($select_community) == "1") {
   $community_description = $fetch_community["description"];
   $community_picture = $fetch_community["picture"];
   $community_banner = $fetch_community["banner"];
-} else head_to("404.html");
+} //else head_to("404.html");
 
 //GET MY COMMUNITIES
 
@@ -36,7 +36,13 @@ if(mysqli_num_rows($select_community) == "1") {
 //} else echo "<p>You do not moderate any communities yet.</p>";
 ?>
 <main>
-  <h1><?php echo "{$community_name} Dashboard"; ?></h1>
+  <?php
+  if(isset($community_name)) echo "<h1>{$community_name} Dashboard</h1>";
+  else echo "<h1>Community Dashboard</h1>";
+
+  if($signed_in) include_once("templates/create-community.php");
+  ?>
+
   <section id='user-bans'>
     <h2>User Bans</h2>
     <form class='less' method='GET'>

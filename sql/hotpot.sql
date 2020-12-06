@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2020 at 05:25 PM
+-- Generation Time: Dec 06, 2020 at 12:17 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -25,29 +25,88 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `comment_by_id` int(11) UNSIGNED NOT NULL,
+  `comment_in_id` int(11) UNSIGNED NOT NULL,
+  `comment_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `edited` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `deleted` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `content` varchar(1000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_deletes`
+--
+
+CREATE TABLE `comment_deletes` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `comment_id` int(11) UNSIGNED NOT NULL,
+  `deleted` tinyint(2) UNSIGNED NOT NULL DEFAULT 1,
+  `deleted_by_id` int(11) UNSIGNED NOT NULL,
+  `deleted_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_reason` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_edits`
+--
+
+CREATE TABLE `comment_edits` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `comment_id` int(11) UNSIGNED NOT NULL,
+  `edit_by_id` int(11) UNSIGNED NOT NULL,
+  `edit_from` varchar(1000) NOT NULL,
+  `edit_to` varchar(1000) NOT NULL,
+  `edit_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_likes`
+--
+
+CREATE TABLE `comment_likes` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `liked` tinyint(2) NOT NULL COMMENT '-2 to +2',
+  `like_from_id` int(11) UNSIGNED NOT NULL,
+  `like_to_id` int(11) UNSIGNED NOT NULL,
+  `like_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `communities`
 --
 
 CREATE TABLE `communities` (
-  `id` int(11) NOT NULL,
-  `created` datetime NOT NULL DEFAULT current_timestamp(),
-  `created_by` int(11) NOT NULL,
-  `moderated_by` int(11) NOT NULL,
-  `deleted` datetime DEFAULT NULL,
-  `deleted_by` int(11) DEFAULT NULL,
-  `deleted_for` text DEFAULT NULL,
-  `name` text NOT NULL,
-  `description` text NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by_id` int(11) UNSIGNED NOT NULL,
+  `quarantined` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `quarantined_date` datetime DEFAULT NULL,
+  `quarantined_by_id` int(11) UNSIGNED DEFAULT NULL,
+  `quarantined_reason` varchar(300) DEFAULT NULL,
+  `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `deleted_date` datetime DEFAULT NULL,
+  `deleted_by_id` int(11) UNSIGNED DEFAULT NULL,
+  `deleted_reason` varchar(300) DEFAULT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `nsfw` tinyint(1) NOT NULL DEFAULT 0,
+  `nsfl` tinyint(1) NOT NULL DEFAULT 0,
   `picture` text NOT NULL DEFAULT 'images/picture.png',
   `banner` text NOT NULL DEFAULT 'images/banner.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `communities`
---
-
-INSERT INTO `communities` (`id`, `created`, `created_by`, `moderated_by`, `deleted`, `deleted_by`, `deleted_for`, `name`, `description`, `picture`, `banner`) VALUES
-(3, '2020-11-20 15:45:50', 9, 9, NULL, NULL, NULL, 'hotpot', 'Welcome to the first community.', 'images/picture.png', 'images/banner.png');
 
 -- --------------------------------------------------------
 
@@ -56,27 +115,48 @@ INSERT INTO `communities` (`id`, `created`, `created_by`, `moderated_by`, `delet
 --
 
 CREATE TABLE `community_bans` (
-  `id` int(11) NOT NULL,
-  `banned` datetime NOT NULL DEFAULT current_timestamp(),
-  `banned_by` int(11) NOT NULL,
-  `banned_from` int(11) NOT NULL,
-  `banned_for` text NOT NULL,
-  `unbanned` tinyint(1) DEFAULT NULL,
-  `unbanned_by` int(11) DEFAULT NULL,
-  `unbanned_for` text DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `banned` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'is banned?',
+  `banned_by_id` int(11) UNSIGNED NOT NULL,
+  `banned_from_id` int(11) UNSIGNED NOT NULL,
+  `banned_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `banned_reason` varchar(300) NOT NULL,
+  `unbanned` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `unbanned_by_id` int(11) UNSIGNED DEFAULT NULL,
+  `unbanned_reason` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `community_subscriptions`
+-- Table structure for table `community_follows`
 --
 
-CREATE TABLE `community_subscriptions` (
-  `id` int(11) NOT NULL,
-  `subscribed` datetime NOT NULL DEFAULT current_timestamp(),
-  `subscriber` int(11) NOT NULL,
-  `subscribed_to` int(11) NOT NULL
+CREATE TABLE `community_follows` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `followed` tinyint(2) UNSIGNED NOT NULL DEFAULT 1,
+  `follow_from_id` int(11) UNSIGNED NOT NULL,
+  `follow_to_id` int(11) UNSIGNED NOT NULL,
+  `followed_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `unfollowed_date` datetime DEFAULT NULL,
+  `unfollowed_reason` varchar(300) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `community_moderators`
+--
+
+CREATE TABLE `community_moderators` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `community_id` int(11) UNSIGNED NOT NULL,
+  `moderator` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'is moderator?',
+  `promotion_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `demotion_date` datetime DEFAULT NULL,
+  `demotion_reason` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -86,25 +166,47 @@ CREATE TABLE `community_subscriptions` (
 --
 
 CREATE TABLE `posts` (
-  `id` int(11) NOT NULL,
-  `posted` datetime NOT NULL DEFAULT current_timestamp(),
-  `posted_by` int(11) NOT NULL,
-  `posted_in` int(11) NOT NULL,
-  `deleted` datetime DEFAULT NULL,
-  `deleted_by` int(11) DEFAULT NULL,
-  `deleted_for` text DEFAULT NULL,
-  `title` text NOT NULL,
-  `content` text NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `posted` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'is moderated?',
+  `post_by_id` int(11) UNSIGNED NOT NULL,
+  `post_in_id` int(11) UNSIGNED NOT NULL,
+  `post_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `pinned` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `pinned_by_id` int(11) UNSIGNED DEFAULT NULL,
+  `pinned_date` datetime DEFAULT NULL,
+  `deleted` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `deleted_by_id` int(11) UNSIGNED DEFAULT NULL,
+  `deleted_date` datetime DEFAULT NULL,
+  `deleted_reason` varchar(300) DEFAULT NULL,
+  `title` varchar(100) NOT NULL,
+  `content` varchar(2000) NOT NULL,
+  `edited` tinyint(2) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `posts`
+-- Table structure for table `post_content_edits`
 --
 
-INSERT INTO `posts` (`id`, `posted`, `posted_by`, `posted_in`, `deleted`, `deleted_by`, `deleted_for`, `title`, `content`) VALUES
-(14, '2020-11-20 15:48:04', 9, 3, NULL, NULL, NULL, 'My First Post', 'This is my first post to test if posting works.'),
-(15, '2020-11-20 17:18:55', 8, 3, NULL, NULL, NULL, 'Who does David Fincher think he is?', 'The damned buffoon.'),
-(16, '2020-11-20 17:23:24', 7, 3, NULL, NULL, NULL, 'Who said I fall in love with every woman I see', 'It was utterly a coincidence the leading ladies in my moving pictures were romantically involved with me. Bloody bastards. ');
+CREATE TABLE `post_content_edits` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `post_id` int(11) UNSIGNED NOT NULL,
+  `edit_by_id` int(11) UNSIGNED NOT NULL,
+  `edit_from` varchar(2000) NOT NULL,
+  `edit_to` varchar(2000) NOT NULL,
+  `edit_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_deletes`
+--
+
+CREATE TABLE `post_deletes` (
+  `id` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -113,47 +215,25 @@ INSERT INTO `posts` (`id`, `posted`, `posted_by`, `posted_in`, `deleted`, `delet
 --
 
 CREATE TABLE `post_likes` (
-  `id` int(11) NOT NULL,
-  `liked` datetime NOT NULL,
-  `liked_by` int(11) NOT NULL,
-  `like_for` int(11) NOT NULL,
-  `like_or_dislike` int(11) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `like_from_id` int(11) UNSIGNED NOT NULL,
+  `like_to_id` int(11) UNSIGNED NOT NULL,
+  `like_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `liked` tinyint(2) NOT NULL COMMENT '-2 to +2'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `replies`
+-- Table structure for table `post_title_edits`
 --
 
-CREATE TABLE `replies` (
-  `id` int(11) NOT NULL,
-  `replied` datetime NOT NULL DEFAULT current_timestamp(),
-  `reply_by` int(11) NOT NULL,
-  `replied_in` int(11) NOT NULL,
-  `replied_to` int(11) DEFAULT NULL,
-  `content` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `replies`
---
-
-INSERT INTO `replies` (`id`, `replied`, `reply_by`, `replied_in`, `replied_to`, `content`) VALUES
-(4, '2020-11-20 16:40:04', 9, 14, NULL, 'This is my first reply to test if replying works.');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reply_likes`
---
-
-CREATE TABLE `reply_likes` (
-  `id` int(11) NOT NULL,
-  `liked` datetime NOT NULL,
-  `liked_by` int(11) NOT NULL,
-  `like_for` int(11) NOT NULL,
-  `like_or_dislike` int(11) NOT NULL
+CREATE TABLE `post_title_edits` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `post_id` int(11) UNSIGNED NOT NULL,
+  `edit_from` varchar(100) NOT NULL,
+  `edit_to` varchar(100) NOT NULL,
+  `edit_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -163,43 +243,197 @@ CREATE TABLE `reply_likes` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `created` datetime NOT NULL DEFAULT current_timestamp(),
-  `name` text NOT NULL,
-  `description` text NOT NULL DEFAULT 'This user has not written a description yet.',
-  `email` text NOT NULL,
-  `verified` tinyint(1) NOT NULL DEFAULT 0,
-  `show_contact_form` tinyint(1) NOT NULL DEFAULT 1,
+  `id` int(11) UNSIGNED NOT NULL,
+  `email` varchar(100) NOT NULL,
   `password` text NOT NULL,
-  `picture` text NOT NULL DEFAULT 'images/picture.png',
-  `banner` text NOT NULL DEFAULT 'images/banner.png'
+  `verify_token` int(6) UNSIGNED ZEROFILL NOT NULL,
+  `verified` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `newsletter_sub` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(500) NOT NULL DEFAULT 'NULL',
+  `picture` varchar(100) NOT NULL DEFAULT '''images/picture.png''',
+  `banner` varchar(100) NOT NULL DEFAULT '''images/banner.png''',
+  `deleted` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `deleted_date` datetime DEFAULT NULL,
+  `deleted_reason` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `created`, `name`, `description`, `email`, `verified`, `show_contact_form`, `password`, `picture`, `banner`) VALUES
-(7, '2020-11-17 00:00:00', 'CharlieChaplin', 'This user has not written a description yet.', 'charles@chaplin.co.uk', 1, 0, '$2y$10$6bPqCQaqhAAZF2Onrvuxh.lhJ.Pv32Gcu23MS5KCtmu2XOcH4XFR6', 'images/charlie.jpg', 'images/banner.png'),
-(8, '2020-11-17 00:00:00', 'OrsonWelles', 'This user has not written a description yet.', 'george.orson@welles.com', 1, 0, '$2y$10$Srh0PsU1EUsALto3su1Sjue5Ar0Qn38JnSAchK1hUHXy7tjYOAW9O', 'images/orson.jpg', 'images/banner.png'),
-(9, '2020-11-17 00:00:00', 'ScottSewards', 'This user has not written a description yet.', 'scott.sewards@outlook.com', 1, 1, '$2y$10$OJ00WHRjrkEc6aI6BhAytOq/7WvPpD/R7yNv46LJPVDKVnO4oUuXu', 'images/george.jpeg', 'images/banner.png');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_subscriptions`
+-- Table structure for table `user_blocks`
 --
 
-CREATE TABLE `user_subscriptions` (
+CREATE TABLE `user_blocks` (
+  `id` int(11) UNSIGNED DEFAULT NULL,
+  `blocked` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'is blocked?',
+  `block_from_id` int(11) UNSIGNED NOT NULL COMMENT 'user id that is blocked',
+  `block_against_id` int(11) UNSIGNED NOT NULL,
+  `block_date` datetime NOT NULL,
+  `unblock_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_follows`
+--
+
+CREATE TABLE `user_follows` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `followed` tinyint(2) UNSIGNED NOT NULL DEFAULT 1,
+  `follow_from_id` int(11) UNSIGNED NOT NULL,
+  `follow_to_id` int(11) UNSIGNED NOT NULL,
+  `followed_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `unfollowed_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_friends`
+--
+
+CREATE TABLE `user_friends` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `friends` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'are friends?',
+  `friend_a_id` int(11) UNSIGNED NOT NULL COMMENT 'sent request',
+  `friend_b_id` int(11) UNSIGNED NOT NULL COMMENT 'accepted reqiest',
+  `befriend_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `unfriend_by_id` int(11) UNSIGNED DEFAULT NULL,
+  `unfriend_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_friend_requests`
+--
+
+CREATE TABLE `user_friend_requests` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `requesting` tinyint(2) UNSIGNED NOT NULL DEFAULT 1,
+  `request_from_id` int(11) UNSIGNED NOT NULL,
+  `request_to_id` int(11) UNSIGNED NOT NULL,
+  `request_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `response` tinyint(2) NOT NULL DEFAULT 0 COMMENT '-1 to 1',
+  `response_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_messages`
+--
+
+CREATE TABLE `user_messages` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `message_from_id` int(11) UNSIGNED NOT NULL,
+  `message_to_id` int(11) UNSIGNED NOT NULL,
+  `message_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `message` varchar(300) NOT NULL,
+  `deleted` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `deleted_by_id` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_name_changes`
+--
+
+CREATE TABLE `user_name_changes` (
   `id` int(11) NOT NULL,
-  `subscribed` datetime NOT NULL DEFAULT current_timestamp(),
-  `subscriber` int(11) NOT NULL,
-  `subscribed_to` int(11) NOT NULL
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `change_from` varchar(50) NOT NULL,
+  `change_to` varchar(50) NOT NULL,
+  `change_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_reports`
+--
+
+CREATE TABLE `user_reports` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `reporting` tinyint(2) UNSIGNED NOT NULL DEFAULT 1,
+  `report_from_id` int(11) UNSIGNED NOT NULL,
+  `report_against_id` int(11) UNSIGNED NOT NULL,
+  `report_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `report` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_sign_ins`
+--
+
+CREATE TABLE `user_sign_ins` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `sign_in_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `ip_address` varchar(128) NOT NULL,
+  `location` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_sign_outs`
+--
+
+CREATE TABLE `user_sign_outs` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `sign_out_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `ip_address` varchar(128) NOT NULL,
+  `location` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_sign_ups`
+--
+
+CREATE TABLE `user_sign_ups` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `sign_up_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `ip_address` varchar(128) NOT NULL,
+  `location` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comment_deletes`
+--
+ALTER TABLE `comment_deletes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comment_edits`
+--
+ALTER TABLE `comment_edits`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comment_likes`
+--
+ALTER TABLE `comment_likes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `communities`
@@ -214,9 +448,15 @@ ALTER TABLE `community_bans`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `community_subscriptions`
+-- Indexes for table `community_follows`
 --
-ALTER TABLE `community_subscriptions`
+ALTER TABLE `community_follows`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `community_moderators`
+--
+ALTER TABLE `community_moderators`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -226,21 +466,27 @@ ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `post_content_edits`
+--
+ALTER TABLE `post_content_edits`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `post_deletes`
+--
+ALTER TABLE `post_deletes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `post_likes`
 --
 ALTER TABLE `post_likes`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `replies`
+-- Indexes for table `post_title_edits`
 --
-ALTER TABLE `replies`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `reply_likes`
---
-ALTER TABLE `reply_likes`
+ALTER TABLE `post_title_edits`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -250,9 +496,57 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_subscriptions`
+-- Indexes for table `user_follows`
 --
-ALTER TABLE `user_subscriptions`
+ALTER TABLE `user_follows`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_friends`
+--
+ALTER TABLE `user_friends`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_friend_requests`
+--
+ALTER TABLE `user_friend_requests`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_messages`
+--
+ALTER TABLE `user_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_name_changes`
+--
+ALTER TABLE `user_name_changes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_reports`
+--
+ALTER TABLE `user_reports`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_sign_ins`
+--
+ALTER TABLE `user_sign_ins`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_sign_outs`
+--
+ALTER TABLE `user_sign_outs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_sign_ups`
+--
+ALTER TABLE `user_sign_ups`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -260,58 +554,142 @@ ALTER TABLE `user_subscriptions`
 --
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `comment_deletes`
+--
+ALTER TABLE `comment_deletes`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `comment_edits`
+--
+ALTER TABLE `comment_edits`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `comment_likes`
+--
+ALTER TABLE `comment_likes`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `communities`
 --
 ALTER TABLE `communities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `community_bans`
 --
 ALTER TABLE `community_bans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `community_subscriptions`
+-- AUTO_INCREMENT for table `community_follows`
 --
-ALTER TABLE `community_subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `community_follows`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `community_moderators`
+--
+ALTER TABLE `community_moderators`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `post_content_edits`
+--
+ALTER TABLE `post_content_edits`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `post_deletes`
+--
+ALTER TABLE `post_deletes`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_likes`
 --
 ALTER TABLE `post_likes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `replies`
+-- AUTO_INCREMENT for table `post_title_edits`
 --
-ALTER TABLE `replies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `reply_likes`
---
-ALTER TABLE `reply_likes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `post_title_edits`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user_subscriptions`
+-- AUTO_INCREMENT for table `user_follows`
 --
-ALTER TABLE `user_subscriptions`
+ALTER TABLE `user_follows`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `user_friends`
+--
+ALTER TABLE `user_friends`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_friend_requests`
+--
+ALTER TABLE `user_friend_requests`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_messages`
+--
+ALTER TABLE `user_messages`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_name_changes`
+--
+ALTER TABLE `user_name_changes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_reports`
+--
+ALTER TABLE `user_reports`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_sign_ins`
+--
+ALTER TABLE `user_sign_ins`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_sign_outs`
+--
+ALTER TABLE `user_sign_outs`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_sign_ups`
+--
+ALTER TABLE `user_sign_ups`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

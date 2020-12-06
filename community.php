@@ -1,5 +1,5 @@
 <?php
-//$title = "{$community_name} Community";
+$title = "Community";
 require_once("head.php");
 
 if(!isset($_GET["name"])) head_to("404.html");
@@ -118,6 +118,6 @@ if($signed_in) {
     ?>
   </section>
 
-  <?php if($signed_in) include_once("templates/post-thread.php"); ?>
+  <?php if($signed_in) include_once("templates/create-post.php"); ?>
 </main>
 <?php require_once("foot.php"); ?>
