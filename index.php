@@ -3,22 +3,16 @@ require_once("head.php");
 ?>
 <main>
   <h1>Index</h1>
-  <section>
-    <form class='less' method='POST'>
-      <input type='submit' name='sign-out' value='Sign-out' <?php if(!$signed_in) echo "disabled"; ?>>
-    </form>
-  </section>
-
   <section id='posts'>
     <h2>Posts</h2>
-    <form class='less' method='POST'>
+    <form class='less hide' method='POST'>
       <div class='inline'>
         <label for='sort-posts-by'>Sort By</label>
         <select id='sort-posts-by' name='sort-by'>
           <option value='newest'>Newest</option>
           <option value='oldest'>Oldest</option>
         </select>
-        <input type='submit' name='sort-posts' value='Sort'>
+        <input type='submit' name='spb' value='Sort'>
       </div>
     </form>
     <?php

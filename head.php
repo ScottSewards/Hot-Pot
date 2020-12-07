@@ -14,7 +14,8 @@ function head_to($location) {
   exit;
 }
 function head_to_self() {
-  head_to($_SERVER["PHP_SELF"]);
+  if(strlen($_SERVER["QUERY_STRING"]) > 0) head_to($_SERVER["PHP_SELF"] . "?" . $_SERVER['QUERY_STRING']);
+  else head_to($_SERVER["PHP_SELF"]);
 }
 
 function email($recipient, $subject, $message, $name, $sender) {

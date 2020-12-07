@@ -31,15 +31,15 @@ if(isset($_POST["sign-up"])) {
     <h1>Sign-up</h1>
     <form method='POST' autocomplete='off'>
       <div class='inline'>
-        <label for='sign-up-name'>Username*</label>
+        <label for='sign-up-name'>Username</label>
         <input id=sign-up-name type='text' pattern='[a-z\A-Z\0-9]{5}' name='name' placeholder='CharlieChaplin' <?php if(isset($sign_up_name)) echo "value='{$sign_up_name}'"; ?> autocomplete='off' autofocus required>
       </div>
       <div class='inline'>
-        <label for='sign-up-email'>Email*</label>
+        <label for='sign-up-email'>Email</label>
         <input id=sign-up-email type='email' name='email' placeholder='charles@chaplin.co.uk' <?php if(isset($sign_up_email)) echo "value='{$sign_up_email}'"; ?> required>
       </div>
       <div class='inline'>
-        <label for='sign-up-password'>Password*</label>
+        <label for='sign-up-password'>Password</label>
         <input id='sign-up-password' type='password' name='password' placeholder='CityLights1931' <?php if(isset($sign_up_password)) echo "value='{$sign_up_password}'"; ?> autocomplete='new-password' required>
         <input type='button' value='Show' name='show-password'>
       </div>

@@ -1,4 +1,3 @@
-
 body {
   transition: opacity 0.275s;
 }
@@ -20,7 +19,6 @@ body {
   width: 100%;
 }
 
-
 .communities, .users {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -33,10 +31,10 @@ body {
     margin: 0;
   }
   .meta {
+    background: var(--col-black);
+    color: var(--col-white);
     display: flex;
     flex-direction: column;
-    background: #AAAAAA80;
-    color: var(--col-white);
     padding: var(--half-space);
     width: 100%;
     text-align: center;
@@ -55,7 +53,7 @@ input.centre {
 }
 
 .post {
-  background: #AAAAAA80;
+  background: var(--col-black);
   padding: var(--space);
   .post-content {
     overflow: hidden;
@@ -69,7 +67,7 @@ input.centre {
 }
 
 .comments {
-  background: #EEEEEE11;
+  background: var(--col-black);
   padding: var(--space);
 }
 .comments + .comments {

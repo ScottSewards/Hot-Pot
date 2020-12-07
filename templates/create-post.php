@@ -3,7 +3,7 @@ if(isset($_POST["submit-create-post"])) {
   $new_post_title = htmlspecialchars(addslashes($_POST["post-title"]));
   $new_post_content = htmlspecialchars(addslashes($_POST["post-content"]));
   mysqli_query($connection, "INSERT INTO posts (post_by_id, post_in_id, post_date, title, content) VALUES ('{$my_id}', '{$community_id}', '{$datetime}', '{$new_post_title}', '{$new_post_content}')");
-  head_to("community.php?name={$community_name}");
+  head_to_self();
 }
 ?>
 <section id='create-post'>

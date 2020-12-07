@@ -3,52 +3,63 @@ $title = "User";
 require_once("head.php");
 
 if(!isset($_GET["name"])) head_to("404.html");
-else $user_name = $_GET["name"];
+else $get_user_name = $_GET["name"];
 
-$select_user = mysqli_query($connection, "SELECT * FROM users WHERE name='{$user_name}'");
+$select_user = mysqli_query($connection, "SELECT * FROM users WHERE name='{$get_user_name}'");
 if(mysqli_num_rows($select_user) == "1") {
   $fetch_user = mysqli_fetch_assoc($select_user);
   $user_id = $fetch_user["id"];
-  //$user_created = $fetch_user["created"];
   $user_description = $fetch_user["description"];
-  $user_email = $fetch_user["email"];
+  $user_description = trim($user_description);
   $user_picture = $fetch_user["picture"];
   $user_banner = $fetch_user["banner"];
-} else {
-  mysqli_close($connection);
-  head_to("404.html");
-}
+} else head_to("404.html");
 
 if($signed_in) {
-  // $select_follower = mysqli_query($connection, "SELECT * FROM user_follows WHERE follow_from_id='{$my_id}' AND follow_to_id='{$user_id}'");
-  // $select_follower_exists = mysqli_num_rows($select_follower);
-  // if($select_follower_exists == "1") {
-  //   $fetch_follower = mysqli_fetch_array($select_follower);
-  //   $select_is_following = $fetch_follower["followed"];
-  // } else $select_is_following = 0;
-  // $follow_value = $select_is_following > "0" ? "Unfollow" : "Follow";
-  // if(isset($_POST["follow"])) {
-  //   if($select_follower_exists > "0") {
-  //     if($select_is_following == "1") mysqli_query($connection, "UPDATE user_follows SET followed='0', unfollowed_on='{$datetime}'");
-  //     else mysqli_query($connection, "UPDATE user_follows SET followed='1', followed_on='{$datetime}'");
-  //   } else mysqli_query($connection, "INSERT INTO user_follows (followed_on, follower, following) VALUES ('{$datetime}', '{$my_id}', '{$user_id}')");
-  //   head_to("user.php?name={$user_name}");
-  // }
-  //
-  // if(isset($_POST["friend"])) {
-  //   //COPY FOLLOW CODE
-  // }
+  $select_follower = mysqli_query($connection, "SELECT following FROM user_follows WHERE follow_from_id='{$my_id}' AND follow_to_id='{$user_id}'");
+  $follower_exists = mysqli_num_rows($select_follower);
+  if($follower_exists == "1") {
+    $fetch_follower = mysqli_fetch_array($select_follower);
+    $follower_following = $fetch_follower["following"];
+  } else $follower_following = 0;
+  $follow_value = $follower_following == "1" ? "Unfollow" : "Follow";
+
+  if(isset($_POST["submit-follow"])) {
+    if($follower_exists == "1") {
+      if($follower_following == "1") mysqli_query($connection, "UPDATE user_follows SET following='0', unfollowed_date='{$datetime}'");
+      else mysqli_query($connection, "UPDATE user_follows SET following='1', followed_date='{$datetime}'");
+    } else mysqli_query($connection, "INSERT INTO user_follows (follow_from_id, follow_to_id, followed_date) VALUES ('{$my_id}', '{$user_id}', '{$datetime}')");
+    head_to_self();
+  }
+  /*
+  SEND FRIEND REQUESTS
+  $select_friend = mysqli_query($connection, "SELECT friends FROM user_friends WHERE (friend_a_id='{$my_id}' AND friend_b_id='{$user_id}') OR (friend_a_id='{$user_id}' AND friend_b_id='{$my_id}')");
+  $friend_exists = mysqli_num_rows($select_friend);
+  if($friend_exists == "1") {
+    $fetch_friend = mysqli_fetch_array($select_friend);
+    $friend_friends = $fetch_friend["friends"];
+  } else $friend_friends = 0;
+  $friend_value = $friend_friends == "1" ? "Unfriend" : "Friend";
+
+  if(isset($_POST["submit-friend"])) {
+    if($friend_exists == "1") {
+      if($friend_friends == "1") mysqli_query($connection, "UPDATE user_friends SET following='0', unfollowed_on='{$datetime}'");
+      else mysqli_query($connection, "UPDATE user_friends SET following='1', followed_date='{$datetime}'");
+    } else mysqli_query($connection, "INSERT INTO user_friends (follow_from_id, follow_to_id, followed_date) VALUES ('{$my_id}', '{$user_id}', '{$datetime}')");
+    head_to_self();
+  }
+  */
 }
 ?>
 <main>
   <section id='user-information'>
     <?php
-    echo "<img class='banner' src='{$user_banner}' alt='Banner for {$user_name}' height='100%' width='100%'>";
-    echo "<img class='picture' src='{$user_picture}' alt='Picture for {$user_name}' height='100%' width='100%'>";
-    echo "<h1>{$user_name}</h1>";
+    echo "<img class='banner' src='{$user_banner}' alt='Banner for {$get_user_name}' height='100%' width='100%'>";
+    echo "<img class='picture' src='{$user_picture}' alt='Picture for {$get_user_name}' height='100%' width='100%'>";
+    echo "<h1>{$get_user_name}</h1>";
 
-    // if($user_description != null) echo "<p class='centre'>{$user_description}</p>";
-    // else echo "<p class='centre'>{$user_name} has not written a description.</p>";
+    //if($user_description === NULL) echo "<p class='centre'>{$get_user_name} has not written a description.</p>";
+    //else echo "<p class='centre'>{$user_description}</p>";
 
     //$user_created_to_new_date = date("jS F Y", strtotime($user_created));
     //echo "<p class='centre'>User since {$user_created_to_new_date}</p>";
@@ -56,24 +67,26 @@ if($signed_in) {
     if($signed_in and $my_id != $user_id) {
       echo "
       <form class='less' method='POST'>
-        <input class='centre' type='submit' name='follow' value='{$follow_value}'>
+        <input class='centre' type='submit' name='submit-follow' value='{$follow_value}'>
       </form>";
+      /*
       echo "
       <form class='less' method='POST'>
-        <input class='centre' type='submit' name='friend' value='Friend'>
+        <input class='centre' type='submit' name='submit-friend' value='{$friend_value}'>
       </form>";
+      */
     }
     ?>
   </section>
-  <section id='user-friends'>
+  <section id='user-friends' class='hide'>
     <h2>Friends</h2>
     <?php
-    echo "<p>{$user_name} has not made any friends yet.</p>";
+    echo "<p>{$get_user_name} has not made any friends yet.</p>";
     echo "<div class='users hide'>";
     echo "</div>";
     ?>
   </section>
-  <section id='user-communities-created'>
+  <section id='user-communities-created' class='hide'>
     <?php
     $select_creations = mysqli_query($connection, "SELECT * FROM communities WHERE created_by_id='{$user_id}'");
     $number_of_creations = mysqli_num_rows($select_creations);
@@ -95,10 +108,10 @@ if($signed_in) {
       //   </div>";
       // }
       echo "</div>";
-    } else echo "<p>{$user_name} has not created any communities.</p>";
+    } else echo "<p>{$get_user_name} has not created any communities.</p>";
     ?>
   </section>
-  <section id='user_community_moderations'>
+  <section id='user-community-moderations' class='hide'>
     <?php
     $select_moderations = mysqli_query($connection, "SELECT * FROM community_moderators WHERE user_id='{$user_id}'");
     $number_of_moderations = mysqli_num_rows($select_moderations);
@@ -120,7 +133,7 @@ if($signed_in) {
       //   </div>";
       // }
       echo "</div>";
-    } else echo "<p>{$user_name} does not moderate any communities.</p>";
+    } else echo "<p>{$get_user_name} does not moderate any communities.</p>";
     ?>
   </section>
   <section id='user-posts'>
@@ -145,7 +158,7 @@ if($signed_in) {
         </div>";
       }
       echo "</div>";
-    } else echo "<p>{$user_name} has not posted in any communities.</p>";
+    } else echo "<p>{$get_user_name} has not posted in any communities.</p>";
     ?>
   </section>
   <section id='user-comments'>
@@ -157,7 +170,7 @@ if($signed_in) {
       echo "<div class='comments'>";
       while($fetch_comment = mysqli_fetch_assoc($select_comments)) { }
       echo "</div>";
-    } else echo "<p>{$user_name} has not commented on any posts.</p>";
+    } else echo "<p>{$get_user_name} has not commented on any posts.</p>";
     /*
     $select_replies = mysqli_query($connection, "SELECT * FROM replies WHERE reply_by='{$user_id}' ORDER BY id DESC");
     if(mysqli_num_rows($select_replies) > "0") {
@@ -181,7 +194,7 @@ if($signed_in) {
         </div>";
       }
       echo "</div>";
-    } else echo "<p>{$user_name} has not replied to any posts.</p>";
+    } else echo "<p>{$get_user_name} has not replied to any posts.</p>";
     */
     ?>
   </section>

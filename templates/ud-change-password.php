@@ -26,6 +26,8 @@ if(isset($_POST["submit-change-password"])) {
       <input id='new-password' type='password' name='new-password' autocomplete='off' required>
       <input type='button' value='Show' name='show-new-password'>
     </div>
-    <input type='submit' name='submit-change-password' value='Change'>
+    <div>      
+      <input type='submit' name='submit-change-password' value='Change'>
+    </div>
   </form>
 </article>
