@@ -2,8 +2,8 @@ body {
   transition: opacity 0.275s;
 }
 
-.sort {
-
+:root {
+  --col-overlay: #11111111;
 }
 
 .picture {
@@ -53,7 +53,7 @@ input.centre {
 }
 
 .post {
-  background: var(--col-black);
+  background: var(--col-overlay);
   padding: var(--space);
   .post-content {
     overflow: hidden;
@@ -67,11 +67,12 @@ input.centre {
 }
 
 .comments {
-  background: var(--col-black);
+  background: var(--col-overlay);
   padding: var(--space);
 }
-.comments + .comments {
-  margin-top: var(--half-space);
+
+.comment + .comment {
+  //margin-top: var(--half-space);
 }
 
 .centre {

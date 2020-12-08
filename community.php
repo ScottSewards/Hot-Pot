@@ -77,9 +77,23 @@ if($signed_in) {
     </form>";
     ?>
   </section>
+  <section id='posts'>
+    <h2>Posts</h2>
+    <?php
+    if(isset($_GET["spb"])) $sort_posts_by = $_GET["spb"];
+    else $sort_posts_by = "newest";
 
+    switch($sort_posts_by) {
+      case "oldest":
+        show_content("posts", $connection, "SELECT * FROM posts ORDER BY post_in_id='{$community_id}' ASC LIMIT 10");
+        break;
+      default:
+        show_content( "posts", $connection, "SELECT * FROM posts ORDER BY post_in_id='{$community_id}' DESC LIMIT 10");
+        break;
+    }
+    ?>
+  </section>
   <?php
-  include_once("templates/show-posts.php");
   if($signed_in) include_once("templates/create-post.php");
   ?>
 </main>
