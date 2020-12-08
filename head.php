@@ -8,13 +8,15 @@ if(!in_array($ip_address, array("127.0.0.1", "::1"))) {
   $is_localhost = true;
   $connection = mysqli_connect("localhost", "root", "", "hotpot") or die; //DO NOT die IN PRODUCTION
 }
+$location;
 
 function head_to($location) {
   header("Location: {$location}");
   exit;
 }
 function head_to_self() {
-  head_to($_SERVER["PHP_SELF"]);
+  if(strlen($_SERVER["QUERY_STRING"]) > 0) head_to($_SERVER["PHP_SELF"] . "?" . $_SERVER['QUERY_STRING']);
+  else head_to($_SERVER["PHP_SELF"]);
 }
 
 function email($recipient, $subject, $message, $name, $sender) {
@@ -73,25 +75,113 @@ function email_verification() {
   //email();
 }
 
+function show_content($content, $connection, $query) {
+  $select_content = mysqli_query($connection, $query);
+  $content_count = mysqli_num_rows($select_content);
+  if($content_count > "0") {
+    echo "<div class='{$content}'>";
+    while($fetch_content = mysqli_fetch_assoc($select_content)) {
+      switch($content) {
+        case "communities":
+          echo_community($fetch_content);
+          break;
+        case "posts":
+          echo_post($connection, $fetch_content);
+          break;
+        case "comments":
+          echo_comment($connection, $fetch_content);
+          break;
+        case "users":
+        case "follower":
+        case "friends":
+          echo_user($fetch_content);
+          break;
+      }
+    }
+    echo "</div>";
+  } else echo "<p>There are no {$content}.</p>";
+  return $content_count;
+}
+function echo_community($fetch) {
+  $community_name = $fetch["name"];
+  $community_picture = $fetch["picture"];
+  echo "
+  <div class='community'>
+    <img src='{$community_picture}' alt='Picture for {$community_name}' height='100%' width='100%'>
+    <div class='meta'>
+      <span><a href='community.php?name={$community_name}'>{$community_name}</a></span>
+    </div>
+  </div>";
+}
+function echo_post($connection, $fetch) {
+  $post_id = $fetch["id"];
+
+  $post_by_id = $fetch["post_by_id"];
+  $select_user_by_post_by_id = mysqli_query($connection, "SELECT * FROM users WHERE id='{$post_by_id}'");
+  $fetch_user_by_post_by_id = mysqli_fetch_assoc($select_user_by_post_by_id);
+  $post_by_name = $fetch_user_by_post_by_id["name"];
+
+  $post_in_id = $fetch["post_in_id"];
+  $select_community_by_post_in_id = mysqli_query($connection, "SELECT * FROM communities WHERE id='{$post_in_id}'");
+  $fetch_community_by_post_in_id = mysqli_fetch_assoc($select_community_by_post_in_id);
+  $post_in_name = $fetch_community_by_post_in_id["name"];
+
+  $post_date = $fetch["post_date"];
+  $post_title = $fetch["title"];
+  $post_content = $fetch["content"];
+  echo "
+  <div class='post'>
+    <span><a href='post.php?id={$post_id}&title={$post_title}'>{$post_title}</a> by <a href='user.php?name={$post_by_name}'>{$post_by_name}</a> in <a href='community.php?name={$post_in_name}'>{$post_in_name}</a> on {$post_date}</span>
+    <span>{$post_content}</span>
+  </div>";
+}
+function echo_comment($connection, $fetch) {
+  $comment_by_id = $fetch["comment_by_id"];
+  $select_user_by_comment_by_id = mysqli_query($connection, "SELECT * FROM users WHERE id='{$comment_by_id}'");
+  $fetch_user_by_comment_by_id = mysqli_fetch_assoc($select_user_by_comment_by_id);
+  $comment_by_user_name = $fetch_user_by_comment_by_id["name"];
+  $comment_date = $fetch["comment_date"];
+  $comment_content = $fetch["content"];
+  $comment_edited = $fetch["edited"];
+  $comment_deleted = $fetch["deleted"];
+
+  if($comment_deleted == "1") echo "
+    <div class='comment'>
+      <p>Reply by <a href='user.php?name={$comment_by_user_name}'>{$comment_by_user_name}</a> on {$comment_date}</p>
+      <p>This comment is deleted.</p>
+    </div>";
+  else if($comment_edited == "1") echo "
+    <div class='comment'>
+      <p>Reply by <a href='user.php?name={$comment_by_user_name}'>{$comment_by_user_name}</a> on {$comment_date}</p>
+      <p>This comment is edited.</p>
+    </div>";
+  else echo "
+    <div class='comment'>
+      <p>Reply by <a href='user.php?name={$comment_by_user_name}'>{$comment_by_user_name}</a> on {$comment_date}</p>
+      <p>{$comment_content}</p>
+    </div>";
+}
+function echo_user($fetch) {
+  echo "user";
+}
+
+session_start();
 if(isset($_POST["sign-out"])) {
-  session_destroy();
-  session_start();
   $_SESSION["signed_in"] = false;
-  $user_id = $_SESSION["id"];
-  mysqli_query($connection, "INSERT INTO user_sign_outs (signed_out, user_id, ip_address) VALUES ('{$datetime}', '{$user_id}', '{$ip_address}')");
+  $my_id = $_SESSION["user"]["id"];
+  mysqli_query($connection, "INSERT INTO user_sign_outs (user_id, sign_out_date, ip_address) VALUES ('{$my_id}', '{$datetime}', '{$ip_address}')");
   head_to_self();
-} else session_start();
+} else
 
 if(isset($_SESSION["signed_in"]) and $_SESSION["signed_in"] == "1") {
   $signed_in = true;
-  $my_id = $_SESSION["id"];
-  $my_name = $_SESSION["name"];
-  $my_description = $_SESSION["description"];
-  $my_email = $_SESSION["email"];
-  $my_newsletter_subscription = $_SESSION["newsletter_subscription"];
-  $my_verified = $_SESSION["verified"];
-  $my_picture = $_SESSION["picture"];
-  $my_banner = $_SESSION["banner"];
+  $my_id = $_SESSION["user"]["id"];
+  $my_name = $_SESSION["user"]["name"];
+  $my_email = $_SESSION["user"]["email"];
+  //$my_newsletter_sub = $_SESSION["user"]["newsletter_subs"];
+  $my_verified = $_SESSION["user"]["verified"];
+  $my_picture = $_SESSION["user"]["picture"];
+  $my_banner = $_SESSION["user"]["banner"];
 } else $signed_in = false;
 
 //date_default_timezone_get(); //DEFAULT TIMEZONE IS 'Europe/Berlin'

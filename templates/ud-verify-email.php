@@ -1,13 +1,15 @@
 <?php
 if(isset($_POST["verify-email"])) {
-  $input_token = htmlspecialchars(addslashes($_POST["verification-token"]));
-  $input_token = trim($input_token);
-  $select_token = mysqli_query($connection, "SELECT token FROM users WHERE id='{$my_id}'");
+  $token = trim(htmlspecialchars(addslashes($_POST["verification-token"])));
+  $select_token = mysqli_query($connection, "SELECT verify_token FROM users WHERE id='{$my_id}'");
   $fetch_token = mysqli_fetch_assoc($select_token);
-  if($input_token == $fetch_token["token"]) {
-    $_SESSION["verified"] = "1";
+  if($token == $fetch_token["verify_token"]) {
+    $_SESSION["user"]["verified"] = "1";
     mysqli_query($connection, "UPDATE users SET verified='1' WHERE id='{$my_id}'");
+    mysqli_query($connection, "INSERT INTO user_verifications (user_id, verified_date, ip_address) VALUES ('{$my_id}', '{$datetime}', '{$ip_address}')");
+    head_to_self();
   } else $error = "Your verification token was incorrect.";
+  unset($_POST["verify-email"]);
 }
 ?>
 <section>
@@ -16,7 +18,7 @@ if(isset($_POST["verify-email"])) {
     <div class='inline'>
       <label for='verification-token'>Token</label>
       <input id='verification-token' type='number' name='verification-token' placeholder='027121'>
-      <input type='submit' name='verify-email' value='Verify Email'>
+      <input type='submit' name='verify-email' value='Verify'>
     </div>
   </form>
 </section>

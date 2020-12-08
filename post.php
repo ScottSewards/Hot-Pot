@@ -1,82 +1,48 @@
 <?php
-if(!isset($_GET["id"])) head_to("404.html");
-
-$id = $_GET["id"];
-$title = $_GET["title"];
+$title = "Post";
 require_once("head.php");
+
+if(!isset($_GET["id"])) head_to("404.html");
+else $id = $_GET["id"];
 
 $select_post = mysqli_query($connection, "SELECT * FROM posts WHERE id='{$id}'");
 if(mysqli_num_rows($select_post) == "1") {
-  $fetch_post = mysqli_fetch_array($select_post);
+  $fetch_post = mysqli_fetch_assoc($select_post);
   $post_id = $fetch_post["id"];
-  $posted = $fetch_post["posted"];
-  $posted_by = $fetch_post["posted_by"];
-  $select_posted_by = mysqli_query($connection, "SELECT name FROM users WHERE id='{$posted_by}'");
-  $fetch_posted_by = mysqli_fetch_array($select_posted_by);
-  $posted_by_name = $fetch_posted_by["name"];
-  $posted_in = $fetch_post["posted_in"];
-  $select_posted_in = mysqli_query($connection, "SELECT name FROM communities WHERE id='{$posted_in}'");
-  $fetch_posted_in = mysqli_fetch_array($select_posted_in);
-  $posted_in_name = $fetch_posted_in["name"];
-  $content = $fetch_post["content"];
-} else head_to("404.html");
 
-if(isset($_POST["submit-reply"])) {
-  $new_replied = date("Y-m-d G:i:s");
-  $new_reply_by = $my_id;
-  $new_replied_in = $post_id;
-  $new_content = $_POST["reply"];
-  mysqli_query($connection, "INSERT INTO replies (replied, reply_by, replied_in, content) VALUES ('{$new_replied}', '{$new_reply_by}', '{$new_replied_in}', '{$new_content}')");
-  head_to("post.php?title={$title}");
-}
+  $post_by_id = $fetch_post["post_by_id"];
+  $select_user_by_post_by_id = mysqli_query($connection, "SELECT * FROM users WHERE id='{$post_by_id}'");
+  $fetch_user_by_post_by_id = mysqli_fetch_assoc($select_user_by_post_by_id);
+  $post_by_name = $fetch_user_by_post_by_id["name"];
+
+  $post_in_id = $fetch_post["post_in_id"];
+  $select_community_by_post_in_id = mysqli_query($connection, "SELECT * FROM communities WHERE id='{$post_in_id}'");
+  $fetch_community_by_post_in_id = mysqli_fetch_assoc($select_community_by_post_in_id);
+  $post_in_name = $fetch_community_by_post_in_id["name"];
+
+  $post_date = $fetch_post["post_date"];
+  $post_title = $fetch_post["title"];
+  $post_content = $fetch_post["content"];
+} else head_to("404.html");
 ?>
 <main>
   <?php
   echo "
-  <h1>{$title}</h1>
+  <h1>{$post_title}</h1>
   <section>
-    <p class='centre'>Posted {$posted} by <a href='user.php?name={$posted_by_name}'>$posted_by_name</a> in <a href='community.php?name={$posted_in_name}'>{$posted_in_name}</a></p>
-    <p>$content</p>
+    <p class='centre'>Posted {$post_date} by <a href='user.php?name={$post_by_name}'>$post_by_name</a> in <a href='community.php?name={$post_in_name}'>{$post_in_name}</a></p>
+    <p>{$post_content}</p>
   </section>";
   ?>
-  <section id='replies'>
-    <h2>Replies</h2>
+  <section id='comments'>
+    <h2>Comments</h2>
     <?php
-    $select_replies = mysqli_query($connection, "SELECT * FROM replies WHERE replied_in='{$post_id}' ORDER BY id DESC");
-    if(mysqli_num_rows($select_replies) > "0") {
-      echo "<div class='replies'>";
-      while($fetch_replies = mysqli_fetch_array($select_replies)) {
-        $reply_replied = $fetch_replies["replied"];
-        $reply_by = $fetch_replies["reply_by"];
-        $select_reply_by_name = mysqli_query($connection, "SELECT name FROM users WHERE id='{$reply_by}'");
-        $fetch_reply_by_name = mysqli_fetch_array($select_reply_by_name);
-        $reply_by_name = $fetch_reply_by_name["name"];
-        $reply_content = $fetch_replies["content"];
-        echo "
-        <div class='reply'>
-          <p>Reply by <a href='user.php?name={$reply_by_name}'>{$reply_by_name}</a> on {$reply_replied}</p>
-          <p>{$reply_content}</p>
-        </div>";
-      }
-      echo "</div>";
-    } else echo "<p>There are no replies yet.</p>";
+    show_content("comments", $connection, "SELECT * FROM comments WHERE comment_in_id='{$post_id}' ORDER BY id");
     ?>
   </section>
-  <section id='submit-a-reply'>
-    <h2>Submit a Reply</h2>
-    <?php
-    if(isset($my_id)) {
-      echo "
-      <form method='POST'>
-        <div class='inline'>
-          <label for='reply'>Comment*</label>
-          <input id='reply' type='text' name='reply' required>
-        </div>
-        <input type='submit' name='submit-reply' value='Reply'/>
-      </form>";
-    } else echo "<p>Sign-in to submit a reply.</p>";
-    ?>
-  </section>
+  <?php
+  if($signed_in) include_once("templates/create-comment.php");
+  ?>
 </main>
 <?php
 require_once("foot.php");

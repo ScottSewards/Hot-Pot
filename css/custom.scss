@@ -1,10 +1,9 @@
-
 body {
   transition: opacity 0.275s;
 }
 
-.sort {
-
+:root {
+  --col-overlay: #11111111;
 }
 
 .picture {
@@ -20,7 +19,6 @@ body {
   width: 100%;
 }
 
-
 .communities, .users {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -33,17 +31,17 @@ body {
     margin: 0;
   }
   .meta {
+    background: var(--col-black);
+    color: var(--col-white);
     display: flex;
     flex-direction: column;
-    background: #AAAAAA80;
-    color: var(--col-white);
     padding: var(--half-space);
     width: 100%;
     text-align: center;
   }
 }
 
-.community, .post, .reply, .user {
+.community, .post, .comment, .user {
   span {
     display: block;
   }
@@ -55,7 +53,7 @@ input.centre {
 }
 
 .post {
-  background: #AAAAAA80;
+  background: var(--col-overlay);
   padding: var(--space);
   .post-content {
     overflow: hidden;
@@ -68,12 +66,13 @@ input.centre {
   margin-top: var(--half-space);
 }
 
-.replies {
-  background: #EEEEEE11;
+.comments {
+  background: var(--col-overlay);
   padding: var(--space);
 }
-.replies + .replies {
-  margin-top: var(--half-space);
+
+.comment + .comment {
+  //margin-top: var(--half-space);
 }
 
 .centre {
