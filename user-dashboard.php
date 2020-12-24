@@ -4,9 +4,8 @@ require_once("head.php");
 if(!$signed_in) head_to("sign-in.php");
 ?>
 <main>
-  <h1>Dashboard</h1>
+  <?php echo "<h1>{$my_name} Dashboard</h1>"; ?>
   <section>
-    <h2>User Settings</h2>
     <?php
     if($my_verified == "0") include_once("templates/ud-verify-email.php");
     include_once("templates/ud-change-name.php");

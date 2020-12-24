@@ -75,6 +75,15 @@ function email_verification() {
   //email();
 }
 
+function send_notification($notification, $connection, $user, $datetime) {
+  switch($notification) {
+    case "friend request":
+      mysqli_query($connection, $query);
+      break;
+  }
+
+}
+
 function show_content($content, $connection, $query) {
   $select_content = mysqli_query($connection, $query);
   $content_count = mysqli_num_rows($select_content);
@@ -162,7 +171,15 @@ function echo_comment($connection, $fetch) {
     </div>";
 }
 function echo_user($fetch) {
-  echo "user";
+  $user_name = $fetch["name"];
+  $user_picture = $fetch['picture'];
+  echo "
+  <div class='user'>
+    <img src='{$user_picture}' alt='Picture for {$user_name}' height='100%' width='100%'>
+    <div class='meta'>
+      <span><a href='user.php?name={$user_name}'>{$user_name}</a></span>
+    </div>
+  </div>";
 }
 
 session_start();
@@ -218,9 +235,10 @@ if(isset($_SESSION["signed_in"]) and $_SESSION["signed_in"] == "1") {
       <div>
         <?php
         if($signed_in) {
-          echo "<a id='' href='user.php?name={$my_name}'>My Profile</a>";
-          echo "<a id='' href='community-dashboard.php'>Community Dashboard</a>";
-          echo "<a id='' href='user-dashboard.php'>User Dashboard</a>";
+          echo "<a id='inbox-link' href='inbox.php'>Inbox</a>";
+          echo "<a id='my-profile-link' href='user.php?name={$my_name}'>My Profile</a>";
+          echo "<a id='community-dashboard-link' href='community-dashboard.php'>Community Dashboard</a>";
+          echo "<a id='user-dashboard-link' href='user-dashboard.php'>User Dashboard</a>";
         } else {
           echo "<a id='sign-in-link' href='sign-in.php'>Sign-in</a>";
           echo "<a id='sign-up-link' href='sign-up.php'>Sign-up</a>";

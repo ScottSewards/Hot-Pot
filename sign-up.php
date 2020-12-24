@@ -1,7 +1,7 @@
 <?php
 $title = "Sign-up";
 require_once("head.php");
-//if($signed_in) head_to("user-dashboard.php");
+if($signed_in) head_to("user-dashboard.php");
 
 if(isset($_POST["sign-up"])) {
   $sign_up_name = htmlspecialchars(addslashes($_POST['name']));

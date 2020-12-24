@@ -35,7 +35,7 @@ require_once("head.php");
     show_content("communities", $connection, "SELECT * FROM communities ORDER BY id DESC LIMIT 6");
     ?>
   </section>
-  <section id='users'>
+  <section id='users' class=''>
     <h2>Users</h2>
     <?php
     show_content("users", $connection, "SELECT * FROM users ORDER BY id DESC LIMIT 6");
