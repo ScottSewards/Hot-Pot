@@ -30,22 +30,25 @@ if(isset($get_community_id)) {
   ?>
 
   <section>
-    <p>There is no functionality here yet.</p>
     <?php
     if(isset($_GET["moderate"])) {
-
+      $community_selected = $_GET["community-select"];
     }
     ?>
     <form class='less'>
       <div class='inline'>
         <label for='community-select'>Community</label>
-        <select id='' class='' name='comm' required>
+        <select id='community-select' name='community-select' required>
           <?php
           $index = 0;
           while($fetch_community_moderated = mysqli_fetch_assoc($select_community_moderations)) {
-            //$community_modereated_name = $fetch_community_moderated[""]
             $index++;
-            echo "<option value='{$index}'>{$index}</option>";
+            $select_community_moderations_by_id = mysqli_query($connection, "SELECT * FROM community_moderators AS cm JOIN communities AS c ON cm.community_id=c.id WHERE cm.community_id='$index'");
+            $fetch_community_moderations_by_id = mysqli_fetch_assoc($select_community_moderations_by_id);
+            $fetch_name = $fetch_community_moderations_by_id["name"];
+
+            if($community_selected == $index) echo "<option value='{$index}' selected>{$fetch_name}</option>";
+            else echo "<option value='{$index}'>{$fetch_name}</option>";
           }
           ?>
         </select>
@@ -53,7 +56,7 @@ if(isset($get_community_id)) {
       </div>
     </form>
 
-    <form>
+    <form class='hide'>
       <div class='inline'>
         <label for=''>Name</label>
         <input id='' type='text' name='' placeholder=''>

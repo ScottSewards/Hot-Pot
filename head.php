@@ -166,8 +166,9 @@ function echo_comment($connection, $fetch) {
     </div>";
   else echo "
     <div class='comment'>
-      <p>Reply by <a href='user.php?name={$comment_by_user_name}'>{$comment_by_user_name}</a> on {$comment_date}</p>
+      <p class='right'>Comment by <a href='user.php?name={$comment_by_user_name}'>{$comment_by_user_name}</a> on {$comment_date}</p>
       <p>{$comment_content}</p>
+      <p class='right'>Likes and dislikes!</p>
     </div>";
 }
 function echo_user($fetch) {

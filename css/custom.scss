@@ -1,11 +1,3 @@
-body {
-  transition: opacity 0.275s;
-}
-
-:root {
-  --col-overlay: #11111111;
-}
-
 .picture {
   margin-top: -5rem;
   width: 10rem;
@@ -47,8 +39,6 @@ body {
   }
 }
 
-
-
 .meta > * {
   overflow: hidden;
   display: -webkit-box;
@@ -62,11 +52,6 @@ body {
   span {
     display: block;
   }
-}
-
-input.centre {
-  display: block;
-  margin: auto;
 }
 
 .post {
@@ -83,13 +68,10 @@ input.centre {
   margin-top: var(--half-space);
 }
 
-.comments {
+.comment {
   background: var(--col-overlay);
-  padding: var(--space);
-}
-
-.comment + .comment {
-  //margin-top: var(--half-space);
+  padding: 1px var(--space);
+  margin: var(--half-space) auto;
 }
 
 .centre {

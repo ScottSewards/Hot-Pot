@@ -25,8 +25,13 @@ require_once("head.php");
           <p>There are no messages.</p>
         </div>
       </div>
-
     </div>
+    <form class='less' method='POST'>
+      <div class='inline'>
+        <input type='text' name='message' min='1' required>
+        <input type='submit' name='send-message' value='Send'>
+      </div>
+    </form>
   </section>
 </main>
 <?php
